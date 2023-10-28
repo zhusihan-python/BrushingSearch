@@ -38,7 +38,7 @@ Item {
 
                 TabButton {
                     height: 30
-                    text: qsTr("历史玻片信息")
+                    text: qsTr("酒店搜索")
                     font {
                         family: Style.fontAwesome
                         bold: false
@@ -55,7 +55,7 @@ Item {
 
                 TabButton {
                     height: 30
-                    text: qsTr("历史报警信息")
+                    text: qsTr("关联订单")
                     // font: QFont(20)
                     font {
                         family: Style.fontAwesome
@@ -73,7 +73,7 @@ Item {
 
                 TabButton {
                     height: 30
-                    text: qsTr("操作日志信息")
+                    text: qsTr("全部订单")
                     font {
                         family: Style.fontAwesome
                         bold: true
@@ -90,25 +90,25 @@ Item {
             }
         }
 
-        // StackLayout {
-        //     width: parent.width
+        StackLayout {
+            width: parent.width
 
-        //     anchors {
-        //         top: barBg.bottom
-        //         bottom: parent.bottom
-        //     }
-        //     currentIndex: bar.currentIndex
+            anchors {
+                top: barBg.bottom
+                bottom: parent.bottom
+            }
+            currentIndex: bar.currentIndex
 
-        //     HistoryTabItem {}
-        //     AlarmTabItem {}
-        //     OperationTabItem {}
-        //     // flow edit page
-        //     Item {
-        //         Rectangle {
-        //             anchors.fill: parent
-        //             color: "blue" 
-        //         }
-        //     }
-        // }
+            HotelSearchItem {}
+            MachineRecordsItem {}
+            RecordsItem {}
+            // flow edit page
+            Item {
+                Rectangle {
+                    anchors.fill: parent
+                    color: "blue" 
+                }
+            }
+        }
     }
 }
