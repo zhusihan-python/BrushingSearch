@@ -1,8 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick 6.6
+import QtQuick.Window 6.6
 import Qt5Compat.GraphicalEffects
 import QtQuick.Timeline 1.0
-import QtQuick.Controls 2.15
+import QtQuick.Controls 6.6
 import QtQuick.Layouts 1.15
 import "components"
 import "pages"

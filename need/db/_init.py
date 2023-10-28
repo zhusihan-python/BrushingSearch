@@ -6,7 +6,7 @@ proj_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 platforms = """CREATE TABLE IF NOT EXISTS platforms (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name VARCHAR,
-                deleted int default 0,
+                deleted int DEFAULT (0),
                 create_time DATETIME default (datetime('now', 'localtime')));"""
 
 hotels = """CREATE TABLE IF NOT EXISTS hotels (
@@ -15,8 +15,8 @@ hotels = """CREATE TABLE IF NOT EXISTS hotels (
                 addr VARCHAR,
                 tel VARCHAR,
                 contacts VARCHAR,
-                provider VARCHAR,
                 comment VARCHAR,
+                deleted INTEGER DEFAULT (0),
                 create_time DATETIME default (datetime('now', 'localtime')));"""
 
 machines = """CREATE TABLE IF NOT EXISTS machines (

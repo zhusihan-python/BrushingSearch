@@ -18,10 +18,19 @@ class DBModels(object):
             return res
         return []
 
+    def get_hotels(self):
+        sql = """SELECT name, addr, contacts, tel, comment, DATE(create_time) FROM hotels 
+                    WHERE deleted=0 ORDER BY id ASC"""
+        self.cur.execute(sql)
+        res = self.cur.fetchall()
+        if res:
+            return res
+        return []        
+
 
 db_model = DBModels()
 
 
 if __name__ == "__main__":
-    platfrom = db_model.search_platform()
-    print("platfrom", platfrom)
+    HOTELS = db_model.get_hotels()
+    print("HOTELS", HOTELS)

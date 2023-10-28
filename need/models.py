@@ -1,66 +1,62 @@
-from PySide6.QtCore import QAbstractListModel, Qt, QModelIndex, Slot
+from PySide6.QtCore import QAbstractTableModel, QAbstractListModel, Qt, QModelIndex, Slot
 from need.db.db_model import db_model
 
 
-class HotelCombo(QAbstractListModel):
-    """
-    A abstract list model that implements the minimum amount of functions
-    neccessary to use the model with a QML QtQuick ComboBox.
-    """
-    def __init__(self, parent=None):
+class HotelModel(QAbstractTableModel):
+    _roles = {Qt.DisplayRole : b'display'}
+
+    def __init__(self) -> None:
         super().__init__()
-        self.parent = parent
-        self.raw_data = []
-        self.lst = []
+        self.raw = []
+        self._data = []
+        self.horHeader = ["酒店名称", "酒店地址", "联系人", "联系电话", "备注", "创建时间"]
 
+    @Slot()
     def init_data(self):
-        data = []
-        self.raw_data = data
-        self.lst = [d[0] for d in data]        
-    
-    def rowCount(self, idx: QModelIndex=None) -> int:
-        return len(self.lst)
-
-    def data(self, index, role=Qt.DisplayRole):
-        if not index.isValid():
-            return None
-        
-        if role == Qt.DisplayRole:
-            return self.lst[index.row()]
-        
-        if role == Qt.UserRole:
-            return 99
-        return
-
-    def insertRow(self, row: int, index: QModelIndex=QModelIndex()) -> bool:
-        if row < 0 or row > len(self.lst):
-            return False
-
-        self.beginInsertRows(QModelIndex(), row, row+1-1)
-        self.lst.insert(row, "Lorem Ipsum")
-        self.endInsertRows()
-        return True
-
-    def setData(self, index: QModelIndex, value: str, role: int=Qt.DisplayRole) -> bool:
-        if index.row() >=0 and index.row() < len(self.lst):
-            if not role == Qt.DisplayRole or role == Qt.EditRole:
-                return False
-            self.lst[index.row()] = value
-            self.dataChanged.emit(index, index, [Qt.EditRole | Qt.DisplayRole])
-            return True
-        return False
-
-    def setNewList(self, lst: list=[]):
         self.beginResetModel()
-        self.lst = lst
+        self.raw = db_model.get_hotels()
+        self._data = [hotel[:-1] for hotel in self.raw]
         self.endResetModel()
-        return
+
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            return self._data[index.row()][index.column()]
+
+        elif role == Qt.ToolTipRole:
+            return f"This is a tool tip for [{index.row()}][{index.column()}]"
+
+        else:
+            return None
 
     @Slot(int, result=int)
-    def get_operator_id(self, index: int) -> int:
-        return self.raw_data[index][-1]
+    def rowCount(self, parent):
+        return len(self._data)
 
-hotel_combo = HotelCombo()
+    def columnCount(self, index):
+        if len(self._data) > 0:
+            return len(self._data[0])
+        return len(self.horHeader)
+
+    def headerData(self, section, orientation, role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self.horHeader[section]
+        return None
+
+    def roleNames(self):
+        return self._roles
+
+    def get_lable_id(self, index):
+        if index >= 0 and index < len(self._data):
+            return self._data[index][0]
+
+    def get_label_ids(self, selected_rows):
+        label_ids = []
+        for index in selected_rows:
+            label_ids.append(self._data[index][0])
+        return label_ids
+
+
+hotel_model = HotelModel()
 
 
 class PlatformCombo(QAbstractListModel):

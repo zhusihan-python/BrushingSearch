@@ -6,7 +6,7 @@ from PySide6.QtGui import QGuiApplication, QIcon
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuickControls2 import QQuickStyle
 from mainWindow import MainWindow
-from need.models import hotel_combo, platform_combo
+from need.models import hotel_model, platform_combo
 
 
 if __name__ == "__main__":
@@ -16,7 +16,7 @@ if __name__ == "__main__":
     # Get Context
     main = MainWindow()
     engine.rootContext().setContextProperty("backend", main)
-    engine.rootContext().setContextProperty("hotelCombo", hotel_combo)
+    engine.rootContext().setContextProperty("hotelModel", hotel_model)
     engine.rootContext().setContextProperty("platformCombo", platform_combo)
 
     # Set App Extra Info
