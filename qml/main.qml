@@ -192,7 +192,7 @@ Window {
                 id: labelTitleBar
                 y: 14
                 color: "#ffffff"
-                text: qsTr("WM Bank - Hi, Wanderson")
+                text: qsTr("大中华区 华南总经理")
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: iconTopLogo.right
                 font.pointSize: 12
@@ -218,9 +218,9 @@ Window {
                 height: 50
                 visible: true
                 CustomToolTip {
-                    text: "Página inicial"
+                    text: "酒店查找"
                 }
-                btnIconSource: "../images/svg_images/home_icon.svg"
+                btnIconSource: "../images/svg_images/search.svg"
                 onClicked: {
                     stackView.push(Qt.resolvedUrl("pages/homePage.qml"))
                     // actualPage.showValue = isValueVisible
@@ -233,18 +233,11 @@ Window {
                 visible: true
                 CustomToolTip {
                     id: settingsTooltip
-                    text: "Configurações da conta"
+                    text: "数据导入"
                 }
-                btnIconSource: "../images/svg_images/settings_icon.svg"
+                btnIconSource: "../images/svg_images/database.svg"
                 onClicked: {
-                    animationMenu.running = true
-                    if(leftMenu.width == 0){
-                        btnSettings.btnIconSource = "../images/svg_images/close_icon_2.svg"
-                        settingsTooltip.text = "Ocultar configurações"
-                    } else {
-                        btnSettings.btnIconSource = "../images/svg_images/settings_icon.svg"
-                        settingsTooltip.text = "Configurações da conta"
-                    }
+                    stackView.push(Qt.resolvedUrl("pages/recordPage.qml"))
                 }
             }
             CustomCircularButton {
@@ -253,23 +246,24 @@ Window {
                 width: 50
                 height: 50
                 CustomToolTip {
-                    text: "Ocultar valores da conta"
+                    text: "酒店导入"
                 }
-                btnIconSource: "../images/svg_images/eye_open_icon.svg"
+                btnIconSource: "../images/svg_images/home_icon.svg"
                 onClicked: {
-                    if(isValueVisible == true){
-                        isValueVisible = false
-                        if(typeof actualPage.showValue !== 'undefined'){
-                            actualPage.showValue = isValueVisible
-                        }
-                        btnShowHide.btnIconSource = "../images/svg_images/eye_close_icon.svg"
-                    } else{
-                        isValueVisible = true
-                        if(typeof actualPage.showValue !== 'undefined'){
-                            actualPage.showValue = isValueVisible
-                        }
-                        btnShowHide.btnIconSource = "../images/svg_images/eye_open_icon.svg"
-                    }
+                    stackView.push(Qt.resolvedUrl("pages/hotelPage.qml"))
+                }
+            }
+            CustomCircularButton {
+                id: telphoneEdit
+                visible: true
+                width: 50
+                height: 50
+                CustomToolTip {
+                    text: "手机号导入"
+                }
+                btnIconSource: "../images/svg_images/phone.svg"
+                onClicked: {
+                    stackView.push(Qt.resolvedUrl("pages/machinePage.qml"))
                 }
             }
         }
