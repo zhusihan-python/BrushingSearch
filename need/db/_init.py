@@ -56,7 +56,7 @@ records = """CREATE TABLE IF NOT EXISTS records (
                 deleted int default 0,
                 create_time DATETIME default (datetime('now', 'localtime')));"""
 
-images_stmt = """CREATE TABLE IF NOT EXISTS images (
+images = """CREATE TABLE IF NOT EXISTS images (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     unique_id VARCHAR,
                     filepath VARCHAR NOT NULL,
@@ -80,7 +80,14 @@ order_screenshot = """CREATE TABLE IF NOT EXISTS order_screenshot (
                         REFERENCES images(id));"""
 
 
-stmts = []
+stmts = (platforms,
+         hotels,
+         machines,
+         machine_platform,
+         records,
+         images,
+         comment_screenshot,
+         order_screenshot,)
 
 
 def init_db():
