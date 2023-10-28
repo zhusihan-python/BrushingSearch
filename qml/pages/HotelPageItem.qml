@@ -7,6 +7,7 @@ import "../components"
 
 Item {
     Rectangle {
+        id: hotelItem
         anchors.fill: parent
         color: "#e6eef6"
 
@@ -68,6 +69,17 @@ Item {
 
                 width: 100
                 height: 25
+                onClicked: {
+                    let popupComponent = Qt.createComponent("newHotelPop.qml")
+                    if( popupComponent.status != Component.Ready ) {
+                        if( popupComponent.status == Component.Error )
+                            console.debug("Error:"+ popupComponent.errorString() );
+                            return;
+                    } else {
+                        let newPopup = popupComponent.createObject(hotelItem);
+                        newPopup.open()
+                    }
+                }
             }
 
             CustomButton {
