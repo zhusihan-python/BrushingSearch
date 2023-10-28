@@ -1,4 +1,4 @@
-import QtQuick 6.15
+import QtQuick 2.15
 import QtQuick.Shapes 1.15
 import Qt5Compat.GraphicalEffects
 
