@@ -45,15 +45,27 @@ class HotelModel(QAbstractTableModel):
     def roleNames(self):
         return self._roles
 
-    def get_lable_id(self, index):
-        if index >= 0 and index < len(self._data):
-            return self._data[index][0]
+    def get_hotel_id(self, index):
+        hotel_id = 0
+        if index >=0 and index <= len(self.raw):
+            hotel_id = self.raw[index][-1]
+        return hotel_id
 
-    def get_label_ids(self, selected_rows):
-        label_ids = []
-        for index in selected_rows:
-            label_ids.append(self._data[index][0])
-        return label_ids
+    @Slot(str, str, str, str)
+    def add_hotel(self, name, addr, contacts, tel):
+        db_model.insert_hotel(name, addr, contacts, tel)
+
+    @Slot(str, str, str, str, int)
+    def alter_hotel(self, name, addr, contacts, tel, index):
+        hotel_id = self.get_hotel_id(index)
+        if hotel_id > 0:
+            db_model.update_hotel(name, addr, contacts, tel)
+
+    @Slot(int)
+    def del_hotel(self, index):
+        hotel_id = self.get_hotel_id(index)
+        if hotel_id > 0:
+            db_model.remove_hotel(hotel_id)       
 
 
 hotel_model = HotelModel()
