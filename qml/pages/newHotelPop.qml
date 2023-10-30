@@ -342,12 +342,27 @@ Popup {
                 implicitHeight: 30
 
                 onClicked: {
-                    display1.addHotel();
+                    if (hotelNameInput.text.trim() === "") {
+                        hotelNameInput.focus = true;
+                        return;
+                    }
+                    if (addrInput.text.trim() === "") {
+                        addrInput.focus = true;
+                        return;
+                    }
+                    if (contactInput.text.trim() === "") {
+                        contactInput.focus = true;
+                        return;
+                    }
+                    if (telInput.text.trim() === "") {
+                        telInput.focus = true;
+                        return;
+                    }
+                    hotelModel.add_hotel(hotelNameInput.text,
+                                         addrInput.text,
+                                         contactInput.text,
+                                         telInput.text);
                 }
-            }
-
-            function addHotel() {
-
             }
         }
     }

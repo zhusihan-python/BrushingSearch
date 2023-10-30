@@ -25,7 +25,24 @@ class DBModels(object):
         res = self.cur.fetchall()
         if res:
             return res
-        return []        
+        return []
+
+    def insert_hotel(self, name, addr, contacts, tel):
+        sql = f"""INSERT INTO hotels (name, addr, contacts, tel) VALUES 
+                    ('{name}', '{addr}', '{contacts}', '{tel}')"""
+        self.cur.execute(sql)
+        self.conn.commit()
+
+    def update_hotel(self, name, addr, contacts, tel, hotel_id):
+        sql = f"""UPDATE hotels SET name='{name}', addr='{addr}', contacts'{contacts}', tel='{tel}' 
+                    WHERE id={hotel_id}"""
+        self.cur.execute(sql)
+        self.conn.commit()
+
+    def remove_hotel(self, hotel_id):
+        sql = f"""DELETE FROM hotel WHERE id={hotel_id}"""
+        self.cur.execute(sql)
+        self.conn.commit()
 
 
 db_model = DBModels()
