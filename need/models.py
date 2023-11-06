@@ -3,13 +3,20 @@ from need.db.db_model import db_model
 
 
 class HotelModel(QAbstractTableModel):
-    _roles = {Qt.DisplayRole : b'display'}
+    hotelName = Qt.UserRole + 1
+    hotelAddr = Qt.UserRole + 2
+    contact = Qt.UserRole + 3
+    telephone = Qt.UserRole + 4
+    comment = Qt.UserRole + 5
+
+    _roles = {hotelName : b'hotelName', hotelAddr: b'hotelAddr', contact: b'contact', 
+        telephone: b'telephone', comment : b'comment', Qt.DisplayRole : b'display'}
 
     def __init__(self) -> None:
         super().__init__()
         self.raw = []
         self._data = []
-        self.horHeader = ["酒店名称", "酒店地址", "联系人", "联系电话", "备注", "创建时间"]
+        self.horHeader = ["酒店名称", "酒店地址", "联系人", "联系电话", "备注"]
 
     @Slot()
     def init_data(self):
@@ -65,10 +72,11 @@ class HotelModel(QAbstractTableModel):
     def del_hotel(self, index):
         hotel_id = self.get_hotel_id(index)
         if hotel_id > 0:
-            db_model.remove_hotel(hotel_id)       
+            db_model.remove_hotel(hotel_id)
 
 
 hotel_model = HotelModel()
+hotel_model.init_data()
 
 
 class PlatformCombo(QAbstractListModel):

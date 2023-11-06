@@ -362,6 +362,8 @@ Popup {
                                          addrInput.text,
                                          contactInput.text,
                                          telInput.text);
+                    hotelModel.init_Data();
+                    newHotelPop.close();
                 }
             }
         }

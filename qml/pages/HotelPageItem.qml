@@ -42,10 +42,8 @@ Item {
                 onTextChanged: {
                     // 模糊搜索逻辑
                     if (length > lengthLimit) remove(lengthLimit, length);
-                    hotelNameTxt.listModel.clear();
-                    if (text) {
-                        // 从数据源搜索过滤结果到listModel
-                    }
+                    // hotelNameTxt.listModel.clear();
+                    hotelProxyModel.set_name_role();
                 }
             }
 
@@ -114,9 +112,9 @@ Item {
             property int horHeaderWidth: 30
             property color scrollBarColor: Qt.lighter("grey")
             property int scrollBarWidth: 6
-            property variant columnWidthArr: [hotelTableArea.width/6, hotelTableArea.width/6, 
-                                                hotelTableArea.width/6, hotelTableArea.width/6, 
-                                                hotelTableArea.width/6, hotelTableArea.width/6]
+            property variant columnWidthArr: [hotelTableArea.width/5, hotelTableArea.width/5, 
+                                                hotelTableArea.width/5, hotelTableArea.width/5, 
+                                                hotelTableArea.width/5]
 
             anchors {
                 top: hotelPageFilter.bottom
@@ -141,7 +139,7 @@ Item {
                 columnSpacing: 0
                 rowSpacing: 0
 
-                property var selectedRows: new Set()
+                property int selectedRow: 0
 
                 rowHeightProvider: function (row) {
                     return hotelTableArea.verHeaderHeight;
@@ -151,12 +149,13 @@ Item {
                     return hotelTableArea.columnWidthArr[column];
                 }
 
-                model: hotelModel
+                model: hotelProxyModel
 
                 delegate: DelegateChooser {
                     DelegateChoice {
                         delegate: Rectangle {
-                                color: (model.row %2 ===0) ? "white": "#F6F6F6";
+                                color: (model.row === hotel_table_view.selectedRow) ? "lightsteelblue" : 
+                                    ((model.row %2 ===0) ? "white": "#F6F6F6");
 
                                 Text {
                                     anchors {
@@ -169,7 +168,9 @@ Item {
                                     anchors.fill: parent
                                     hoverEnabled: true
 
-                                    onClicked: {}
+                                    onClicked: {
+                                        hotel_table_view.selectedRow = row;
+                                    }
                                 }
                             }
                         }
