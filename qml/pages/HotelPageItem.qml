@@ -44,6 +44,7 @@ Item {
                     if (length > lengthLimit) remove(lengthLimit, length);
                     // hotelNameTxt.listModel.clear();
                     hotelProxyModel.set_name_role();
+                    hotelProxyModel.setFilterFixedString(text);
                 }
             }
 
