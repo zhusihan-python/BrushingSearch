@@ -34,7 +34,7 @@ class DBModels(object):
         self.conn.commit()
 
     def update_hotel(self, name, addr, contacts, tel, hotel_id):
-        sql = f"""UPDATE hotels SET name='{name}', addr='{addr}', contacts'{contacts}', tel='{tel}' 
+        sql = f"""UPDATE hotels SET name='{name}', addr='{addr}', contacts='{contacts}', tel='{tel}' 
                     WHERE id={hotel_id}"""
         self.cur.execute(sql)
         self.conn.commit()
@@ -44,10 +44,37 @@ class DBModels(object):
         self.cur.execute(sql)
         self.conn.commit()
 
+    def get_machines(self):
+        sql = """SELECT number, telephone, person_name, card_type, card_fee, operator, DATE(create_time) 
+                    FROM machines ORDER BY id ASC"""
+        self.cur.execute(sql)
+        res = self.cur.fetchall()
+        if res:
+            return res
+        return []
+
+    def insert_machine(self, number, tele, person, card_type, card_fee, operator):
+        sql = f"""INSERT INTO machines (number, telephone, person_name, card_type, card_fee, operator) 
+                    VALUES ('{number}', '{tele}', '{person}', '{card_type}', '{card_fee}', '{operator}')"""
+        self.cur.execute(sql)
+        self.conn.commit()
+
+    def update_machine(self, tele, person, card_type, card_fee, operator, machine_id):
+        sql = f"""UPDATE machines SET telephone='{tele}', person_name='{person}', card_type='{card_type}', 
+                    card_fee='{card_fee}',  operator='{operator}' 
+                    WHERE id={machine_id}"""
+        self.cur.execute(sql)
+        self.conn.commit()
+
+    def remove_machine(self, machine_id):
+        sql = f"""DELETE FROM machines WHERE id={machine_id}"""
+        self.cur.execute(sql)
+        self.conn.commit()     
+
 
 db_model = DBModels()
 
 
 if __name__ == "__main__":
-    HOTELS = db_model.get_hotels()
-    print("HOTELS", HOTELS)
+    machines = db_model.get_machines()
+    print("machines", machines)

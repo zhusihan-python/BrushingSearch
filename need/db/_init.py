@@ -22,7 +22,7 @@ hotels = """CREATE TABLE IF NOT EXISTS hotels (
 machines = """CREATE TABLE IF NOT EXISTS machines (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 number VARCHAR,
-                telphone VARCHAR,
+                telephone VARCHAR,
                 person_name VARCHAR,
                 card_type VARCHAR,
                 card_fee VARCHAR,

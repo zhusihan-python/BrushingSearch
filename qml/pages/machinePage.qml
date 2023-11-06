@@ -25,6 +25,53 @@ Item {
             anchors {
                 top: parent.top
             }
+
+            TabBar {
+                id: bar
+                height: 30
+                width: 120
+
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                }
+
+                TabButton {
+                    height: 30
+                    text: qsTr("机器管理")
+                    font {
+                        family: Style.fontAwesome
+                        bold: false
+                        pointSize: 12
+                    }
+
+                    anchors {
+                        top: parent.top
+                    }
+                    background: Rectangle {
+                        color: bar.currentIndex == 0 ? "white" : "mediumslateblue"
+                    }
+                }
+            }
+        }
+
+        StackLayout {
+            width: parent.width
+
+            anchors {
+                top: barBg.bottom
+                bottom: parent.bottom
+            }
+            currentIndex: bar.currentIndex
+
+            MachinePageItem {}
+            // flow edit page
+            Item {
+                Rectangle {
+                    anchors.fill: parent
+                    color: "blue" 
+                }
+            }
         }
     }
 }
