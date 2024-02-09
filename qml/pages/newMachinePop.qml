@@ -406,25 +406,19 @@ Popup {
                         }
                     }
 
-                    TextField {
-                        id: operaterInput
-                        selectByMouse: true
-                        placeholderText: qsTr("不允许为空")
-
-                        property int lengthLimit: 20
-
-                        background: Rectangle {
-                            id: operaterInputBg
-                            implicitWidth: 250; implicitHeight: 30
-                            color: operaterInput.enabled ? "white": "transparent"
-                            property alias borderColor: operaterInputBg.border.color
-                            border {
-                                color: operaterInput.focus ? "#21be2b": "transparent"
-                            }
+                    ComboBox {
+                        id: operaterSelector
+                        width: 150
+                        height: 25
+                        model: ListModel {
+                            ListElement { text: "中国移动" }
+                            ListElement { text: "中国联通" }
+                            ListElement { text: "中国电信" }
+                            ListElement { text: "中国广电" }
+                            ListElement { text: "中信网络" }
                         }
-                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
                     }
-                }   
+                }
             }
 
             Rectangle {
@@ -628,11 +622,13 @@ Popup {
                         cardFeeInput.focus = true;
                         return;
                     }
-                    hotelModel.add_hotel(machineNameInput.text,
-                                         telInput.text,
-                                         identityInput.text,
-                                         cardTypeInput.text);
-                    hotelModel.init_Data();
+                    machineModel.add_machine(machineNameInput.text,
+                                             telInput.text,
+                                             identityInput.text,
+                                             cardTypeInput.text,
+                                             cardFeeInput.text,
+                                             operaterSelector.currentIndex);
+                    machineModel.init_data();
                     newMachinePop.close();
                 }
             }

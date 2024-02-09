@@ -69,14 +69,14 @@ Item {
                 width: 100
                 height: 25
                 onClicked: {
-                    let popupComponent = Qt.createComponent("newMachinePop.qml")
+                    let popupComponent = Qt.createComponent("newMachinePop.qml");
                     if( popupComponent.status != Component.Ready ) {
                         if( popupComponent.status == Component.Error )
                             console.debug("Error:"+ popupComponent.errorString() );
                             return;
                     } else {
                         let newPopup = popupComponent.createObject(hotelItem);
-                        newPopup.open()
+                        newPopup.open();
                     }
                 }
             }
@@ -90,6 +90,18 @@ Item {
 
                 width: 100
                 height: 25
+                onClicked: {
+                    let popupComponent = Qt.createComponent("delMachinePop.qml");
+                    if( popupComponent.status != Component.Ready ) {
+                        if( popupComponent.status == Component.Error )
+                            console.debug("Error:"+ popupComponent.errorString());
+                            return;
+                    } else {
+                        let delPopup = popupComponent.createObject(hotelItem);
+                        delPopup.cur_name = machineModel.get_name(machine_table_view.selectedRow);
+                        delPopup.open();
+                    }
+                }
             }
         }
 

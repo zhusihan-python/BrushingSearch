@@ -152,7 +152,7 @@ Item {
                     return historyTable.columnWidthArr[column];
                 }
 
-                model: historyRecordModel
+                model: machineModel
 
                 delegate: DelegateChooser {
                     DelegateChoice {
@@ -290,7 +290,7 @@ Item {
         
                             Text {
                                 anchors.centerIn: parent
-                                text: historyRecordModel.headerData(index, Qt.Horizontal)
+                                text: machineModel.headerData(index, Qt.Horizontal)
                             }
 
                             MouseArea {

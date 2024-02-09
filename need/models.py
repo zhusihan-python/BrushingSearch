@@ -138,6 +138,13 @@ class MachineModel(QAbstractTableModel):
             hotel_id = self.raw[index][-1]
         return hotel_id
 
+    @Slot(int, result=str)
+    def get_name(self, index):
+        name = ""
+        if index >=0 and index <= len(self.raw):
+            name = self.raw[index][0]
+        return name
+
     @Slot(str, str, str, str, str, str)
     def add_machine(self, number, tele, person, card_type, card_fee, operator):
         db_model.insert_machine(number, tele, person, card_type, card_fee, operator)

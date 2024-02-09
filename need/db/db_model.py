@@ -45,7 +45,8 @@ class DBModels(object):
         self.conn.commit()
 
     def get_machines(self):
-        sql = """SELECT number, telephone, person_name, card_type, card_fee, operator, DATE(create_time) 
+        sql = """SELECT number, telephone, person_name, card_type, card_fee, operator, 
+                    DATE(create_time), id 
                     FROM machines ORDER BY id ASC"""
         self.cur.execute(sql)
         res = self.cur.fetchall()
