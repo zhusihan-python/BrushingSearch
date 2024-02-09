@@ -91,22 +91,24 @@ Item {
                 width: 100
                 height: 25
                 onClicked: {
-                    let popupComponent = Qt.createComponent("delMachinePop.qml");
-                    if( popupComponent.status != Component.Ready ) {
-                        if( popupComponent.status == Component.Error )
-                            console.debug("Error:"+ popupComponent.errorString());
-                            return;
-                    } else {
-                        let delPopup = popupComponent.createObject(hotelItem);
-                        delPopup.cur_name = machineModel.get_name(machine_table_view.selectedRow);
-                        delPopup.open();
+                    if (machine_table_view.rows > 0) {
+                        let popupComponent = Qt.createComponent("delMachinePop.qml");
+                        if( popupComponent.status != Component.Ready ) {
+                            if( popupComponent.status == Component.Error )
+                                console.debug("Error:"+ popupComponent.errorString());
+                                return;
+                        } else {
+                            let delPopup = popupComponent.createObject(hotelItem);
+                            delPopup.cur_name = machineModel.get_name(machine_table_view.selectedRow);
+                            delPopup.open();
+                        }
                     }
                 }
             }
         }
 
         Rectangle {
-            id: hotelTableArea
+            id: machineTableArea
             anchors {
                 top: machinePageFilter.bottom
                 bottom: parent.bottom
@@ -125,10 +127,10 @@ Item {
             property int horHeaderWidth: 30
             property color scrollBarColor: Qt.lighter("grey")
             property int scrollBarWidth: 6
-            property variant columnWidthArr: [hotelTableArea.width/7, hotelTableArea.width/7, 
-                                                hotelTableArea.width/7, hotelTableArea.width/7, 
-                                                hotelTableArea.width/7, hotelTableArea.width/7, 
-                                                hotelTableArea.width/7]
+            property variant columnWidthArr: [machineTableArea.width/7, machineTableArea.width/7, 
+                                                machineTableArea.width/7, machineTableArea.width/7, 
+                                                machineTableArea.width/7, machineTableArea.width/7, 
+                                                machineTableArea.width/7]
 
             anchors {
                 top: machinePageFilter.bottom
@@ -143,8 +145,8 @@ Item {
                 id: machine_table_view
                 anchors {
                     fill: parent
-                    leftMargin: hotelTableArea.verHeaderWidth
-                    topMargin: hotelTableArea.horHeaderHeight
+                    leftMargin: machineTableArea.verHeaderWidth
+                    topMargin: machineTableArea.horHeaderHeight
                     bottomMargin: 1
                 }
 
@@ -156,11 +158,11 @@ Item {
                 property int selectedRow: 0
 
                 rowHeightProvider: function (row) {
-                    return hotelTableArea.verHeaderHeight;
+                    return machineTableArea.verHeaderHeight;
                 }
 
                 columnWidthProvider: function (column) {
-                    return hotelTableArea.columnWidthArr[column];
+                    return machineTableArea.columnWidthArr[column];
                 }
 
                 model: machineProxyModel
@@ -192,8 +194,8 @@ Item {
             }
 
             Rectangle {
-                width: hotelTableArea.verHeaderWidth
-                height: hotelTableArea.verHeaderHeight
+                width: machineTableArea.verHeaderWidth
+                height: machineTableArea.verHeaderHeight
                 color: "#F8F8F8"
                 anchors {
                     top: parent.top
@@ -221,9 +223,9 @@ Item {
                 anchors{
                     left: parent.left
                     right: parent.right
-                    leftMargin: hotelTableArea.verHeaderWidth
+                    leftMargin: machineTableArea.verHeaderWidth
                 }
-                height: hotelTableArea.horHeaderHeight
+                height: machineTableArea.horHeaderHeight
                 z: 2
                 //暂存鼠标拖动的位置
                 property int posXTemp: 0
@@ -253,16 +255,16 @@ Item {
                         Rectangle {
                             id: rect_machine_header_horizontal
                             width: machine_table_view.columnWidthProvider(index)+machine_table_view.columnSpacing
-                            height: hotelTableArea.horHeaderHeight
+                            height: machineTableArea.horHeaderHeight
 
                             Rectangle {
                                 id: headerItemBg
-                                height: hotelTableArea.horHeaderHeight
+                                height: machineTableArea.horHeaderHeight
                                 anchors.fill: parent
 
                                 Canvas {
                                     implicitWidth: rect_machine_header_horizontal.width;
-                                    implicitHeight: hotelTableArea.horHeaderHeight;
+                                    implicitHeight: machineTableArea.horHeaderHeight;
                                     onPaint: {
                                         var ctx = getContext("2d");
                                         var gradient = ctx.createLinearGradient(0, 0, 0, 32);
@@ -307,7 +309,7 @@ Item {
                                         rect_machine_header_horizontal.width=10;
                                     }
                                     machine_header_horizontal.posXTemp=mouseX;
-                                    hotelTableArea.columnWidthArr[index]=(rect_machine_header_horizontal.width-machine_table_view.columnSpacing);
+                                    machineTableArea.columnWidthArr[index]=(rect_machine_header_horizontal.width-machine_table_view.columnSpacing);
                                     //刷新布局，这样宽度才会改变
                                     machine_table_view.forceLayout();
                                 }
