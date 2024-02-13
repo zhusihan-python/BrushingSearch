@@ -45,7 +45,14 @@ class DBModels(object):
         self.conn.commit()
 
     def get_machines(self):
-        sql = """SELECT number, telephone, person_name, card_type, card_fee, operator, 
+        sql = """SELECT number, telephone, person_name, card_type, card_fee, 
+                    CASE operator 
+                        WHEN 0 THEN '中国移动' 
+                        WHEN 1 THEN '中国联通' 
+                        WHEN 2 THEN '中国电信' 
+                        WHEN 3 THEN '中国广电' 
+                        WHEN 4 THEN '中信网络' 
+                    END AS operator, 
                     DATE(create_time), id 
                     FROM machines ORDER BY id ASC"""
         self.cur.execute(sql)
