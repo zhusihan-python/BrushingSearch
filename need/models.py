@@ -58,6 +58,13 @@ class HotelModel(QAbstractTableModel):
             hotel_id = self.raw[index][-1]
         return hotel_id
 
+    @Slot(int, result=str)
+    def get_name(self, index):
+        name = ""
+        if index >=0 and index <= len(self.raw):
+            name = self.raw[index][0]
+        return name
+
     @Slot(str, str, str, str)
     def add_hotel(self, name, addr, contacts, tel):
         db_model.insert_hotel(name, addr, contacts, tel)

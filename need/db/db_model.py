@@ -19,7 +19,7 @@ class DBModels(object):
         return []
 
     def get_hotels(self):
-        sql = """SELECT name, addr, contacts, tel, comment, DATE(create_time) FROM hotels 
+        sql = """SELECT name, addr, contacts, tel, comment, id FROM hotels 
                     WHERE deleted=0 ORDER BY id ASC"""
         self.cur.execute(sql)
         res = self.cur.fetchall()
@@ -40,7 +40,7 @@ class DBModels(object):
         self.conn.commit()
 
     def remove_hotel(self, hotel_id):
-        sql = f"""DELETE FROM hotel WHERE id={hotel_id}"""
+        sql = f"""DELETE FROM hotels WHERE id={hotel_id}"""
         self.cur.execute(sql)
         self.conn.commit()
 

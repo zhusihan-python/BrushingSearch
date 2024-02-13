@@ -90,6 +90,20 @@ Item {
 
                 width: 100
                 height: 25
+                onClicked: {
+                    if (hotel_table_view.rows > 0) {
+                        let popupComponent = Qt.createComponent("delHotelPop.qml");
+                        if( popupComponent.status != Component.Ready ) {
+                            if( popupComponent.status == Component.Error )
+                                console.debug("Error:"+ popupComponent.errorString());
+                                return;
+                        } else {
+                            let delPopup = popupComponent.createObject(hotelItem);
+                            delPopup.cur_name = hotelModel.get_name(hotel_table_view.selectedRow);
+                            delPopup.open();
+                        }
+                    }
+                }
             }
         }
 
