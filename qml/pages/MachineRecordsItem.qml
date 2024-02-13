@@ -5,7 +5,7 @@ import Qt.labs.qmlmodels 1.0
 import "../components"
 
 Item {
-    property string destination: fileDialog.selectedFile
+    property string destination: mRFileDialog.selectedFile
     property int export_type: 0
     Rectangle {
         anchors.fill: parent
@@ -24,7 +24,7 @@ Item {
             }
 
             TextField {
-                id: recordIdTextField
+                id: mRecordIdTextField
                 width: 150
                 height: 25
                 selectByMouse: true
@@ -33,29 +33,17 @@ Item {
                 property int lengthLimit: 20
                 background: Rectangle {
                     implicitWidth: 150; implicitHeight: 30
-                    color: recordIdTextField.enabled ? "white": "transparent"
+                    color: mRecordIdTextField.enabled ? "white": "transparent"
 
                     border {
-                        color: recordIdTextField.focus ? "#21be2b": "grey"
+                        color: mRecordIdTextField.focus ? "#21be2b": "grey"
                     }
                 }
                 onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
             }
 
             CustomButton {
-                id: historyRecentWeekBtn
-                text: qsTr("最近一周")
-                colorPressed: "#55aaff"
-                colorMouseOver: "#40405f"
-                colorDefault: "#33334c"
-
-                width: 100
-                height: 25
-
-            }
-
-            CustomButton {
-                id: queryBtn
+                id: mRQueryBtn
                 text: qsTr("查询")
                 colorDefault: Qt.lighter("blue")
                 colorPressed: "#55aaff"
@@ -69,7 +57,7 @@ Item {
             }
 
             CustomButton {
-                id: exportBtn
+                id: mRExportBtn
                 text: qsTr("导出")
                 colorDefault: Qt.lighter("blue")
                 colorPressed: "#55aaff"
@@ -81,7 +69,7 @@ Item {
                 onClicked: {
                     if ( history_table_view.selectedRows.size > 0 ) {
                         export_type = 0;
-                        fileDialog.open();
+                        mRFileDialog.open();
                     } else {
                         // MessageBox.showMessageBox("请选择记录", "提示");
                     }
@@ -89,12 +77,12 @@ Item {
             }
 
             FileDialog {
-                id: fileDialog
+                id: mRFileDialog
                 fileMode: FileDialog.SaveFile
                 nameFilters: ["PDF files (*.pdf)"]
                  onAccepted: {
-                    // console.log("User has selected " + fileDialog.selectedFile, destination);
-                    fileDialog.close();
+                    // console.log("User has selected " + mRFileDialog.selectedFile, destination);
+                    mRFileDialog.close();
                     pdfWriter.write_to_file_path(destination.toString(), [...history_table_view.selectedRows], export_type);
                 }
             }
