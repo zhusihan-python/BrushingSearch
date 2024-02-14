@@ -173,6 +173,95 @@ machine_model = MachineModel()
 machine_model.init_data()
 
 
+class MachineRecordModel(QAbstractTableModel):
+    number = Qt.UserRole + 1
+    telephone = Qt.UserRole + 2
+    person = Qt.UserRole + 3
+    cardType = Qt.UserRole + 4
+    cardFee= Qt.UserRole + 5
+    operator = Qt.UserRole + 6
+    createTime = Qt.UserRole + 7
+
+    _roles = {number : b'number', telephone: b'telephone', person: b'person', 
+        cardType: b'cardType', cardFee : b'cardFee', operator: b'operator', 
+        createTime: b'createTime', Qt.DisplayRole : b'display'}
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.raw = []
+        self._data = []
+        self.horHeader = ["平台", "下单日期", "酒店名称", "点评日期", "点评成功", "代付人", 
+                          "付款渠道", "付款金额", "是否结账", "入住人", "电话", "评论截图", 
+                          "下单截图", "IP地址"]
+
+    @Slot()
+    def init_data(self):
+        self.beginResetModel()
+        self.raw = db_model.get_machines()
+        self._data = [machine[:-1] for machine in self.raw]
+        self.endResetModel()
+
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            return self._data[index.row()][index.column()]
+
+        elif role == Qt.ToolTipRole:
+            return f"This is a tool tip for [{index.row()}][{index.column()}]"
+
+        else:
+            return None
+
+    @Slot(int, result=int)
+    def rowCount(self, parent):
+        return len(self._data)
+
+    def columnCount(self, index):
+        if len(self._data) > 0:
+            return len(self._data[0])
+        return len(self.horHeader)
+
+    def headerData(self, section, orientation, role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self.horHeader[section]
+        return None
+
+    def roleNames(self):
+        return self._roles
+
+    def get_machine_id(self, index):
+        hotel_id = 0
+        if index >=0 and index <= len(self.raw):
+            hotel_id = self.raw[index][-1]
+        return hotel_id
+
+    @Slot(int, result=str)
+    def get_name(self, index):
+        name = ""
+        if index >=0 and index <= len(self.raw):
+            name = self.raw[index][0]
+        return name
+
+    @Slot(str, str, str, str, str, str)
+    def add_machine(self, number, tele, person, card_type, card_fee, operator):
+        db_model.insert_machine(number, tele, person, card_type, card_fee, operator)
+
+    @Slot(str, str, str, str, str)
+    def alter_machine(self, index, tele, person, card_type, card_fee, operator):
+        machine_id = self.get_machine_id(index)
+        if machine_id > 0:
+            db_model.update_machine(tele, person, card_type, card_fee, operator, machine_id)
+
+    @Slot(int)
+    def del_machine(self, index):
+        machine_id = self.get_machine_id(index)
+        if machine_id > 0:
+            db_model.remove_machine(machine_id)
+
+
+machine_record_model = MachineRecordModel()
+machine_record_model.init_data()
+
+
 class PlatformCombo(QAbstractListModel):
     """
     A abstract list model that implements the minimum amount of functions

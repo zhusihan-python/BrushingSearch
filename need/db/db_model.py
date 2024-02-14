@@ -77,12 +77,32 @@ class DBModels(object):
     def remove_machine(self, machine_id):
         sql = f"""DELETE FROM machines WHERE id={machine_id}"""
         self.cur.execute(sql)
-        self.conn.commit()     
+        self.conn.commit()
+
+    def get_machine_records(self):
+        # sql = """SELECT r.platform, r.date, h.name, r.comment_date, r.is_comment, r.payor, r.pay_channel, 
+        #             r.payment, r.is_paid, r.resident, r.tel, 
+        #             GROUP_CONCAT(o.filepath, ',') AS order_imgs, 
+        #             GROUP_CONCAT(c.filepath, ',') AS comment_imgs FROM records r 
+        #             LEFT JOIN hotels h ON r.hotel_id = h.id 
+        #             LEFT JOIN order_screenshot o ON r.id=o.record_id 
+        #             LEFT JOIN comment_screenshot c ON r.id=c.record_id"""
+        sql = """SELECT r.platform, r.date, h.name, r.comment_date, r.is_comment, r.payor, r.pay_channel, 
+                    r.payment, r.is_paid, r.resident, r.tel, 
+                    (SELECT GROUP_CONCAT(o.filepath, ',') AS order_imgs FROM order_screenshot o ) AS OM, 
+                    (SELECT GROUP_CONCAT(c.filepath, ',') AS comment_imgs FROM comment_screenshot c) AS CM 
+                    FROM records r 
+                    LEFT JOIN hotels h ON r.hotel_id = h.id"""
+        self.cur.execute(sql)
+        res = self.cur.fetchall()
+        if res:
+            return res
+        return []        
 
 
 db_model = DBModels()
 
 
 if __name__ == "__main__":
-    machines = db_model.get_machines()
-    print("machines", machines)
+    machine_records = db_model.get_machine_records()
+    print("machine_records", machine_records)
