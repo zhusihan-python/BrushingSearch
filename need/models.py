@@ -174,17 +174,26 @@ machine_model.init_data()
 
 
 class MachineRecordModel(QAbstractTableModel):
-    number = Qt.UserRole + 1
-    telephone = Qt.UserRole + 2
-    person = Qt.UserRole + 3
-    cardType = Qt.UserRole + 4
-    cardFee= Qt.UserRole + 5
-    operator = Qt.UserRole + 6
-    createTime = Qt.UserRole + 7
+    platform = Qt.UserRole + 1
+    date = Qt.UserRole + 2
+    hotel_name = Qt.UserRole + 3
+    comment_date = Qt.UserRole + 4
+    is_comment= Qt.UserRole + 5
+    payor = Qt.UserRole + 6
+    pay_channel = Qt.UserRole + 7
+    payment = Qt.UserRole + 8
+    is_paid = Qt.UserRole + 9
+    resident = Qt.UserRole + 10
+    tel = Qt.UserRole + 11
+    order_img = Qt.UserRole + 12
+    comment_img = Qt.UserRole + 13
+    ip_addr = Qt.UserRole + 14
 
-    _roles = {number : b'number', telephone: b'telephone', person: b'person', 
-        cardType: b'cardType', cardFee : b'cardFee', operator: b'operator', 
-        createTime: b'createTime', Qt.DisplayRole : b'display'}
+    _roles = {platform : b'platform', date: b'date', hotel_name: b'hotel_name', 
+        comment_date: b'comment_date', is_comment : b'is_comment', payor: b'payor', 
+        pay_channel: b'pay_channel', payment: b'payment', is_paid: b'is_paid', 
+        resident: b'resident', tel: b'tel', order_img: b'order_img', 
+        comment_img: b'comment_img', ip_addr: b'ip_addr', Qt.DisplayRole : b'display'}
 
     def __init__(self) -> None:
         super().__init__()
@@ -197,8 +206,8 @@ class MachineRecordModel(QAbstractTableModel):
     @Slot()
     def init_data(self):
         self.beginResetModel()
-        self.raw = db_model.get_machines()
-        self._data = [machine[:-1] for machine in self.raw]
+        self.raw = db_model.get_machine_records()
+        self._data = [record[:-1] for record in self.raw]
         self.endResetModel()
 
     def data(self, index, role):

@@ -80,19 +80,17 @@ class DBModels(object):
         self.conn.commit()
 
     def get_machine_records(self):
-        # sql = """SELECT r.platform, r.date, h.name, r.comment_date, r.is_comment, r.payor, r.pay_channel, 
-        #             r.payment, r.is_paid, r.resident, r.tel, 
-        #             GROUP_CONCAT(o.filepath, ',') AS order_imgs, 
-        #             GROUP_CONCAT(c.filepath, ',') AS comment_imgs FROM records r 
-        #             LEFT JOIN hotels h ON r.hotel_id = h.id 
-        #             LEFT JOIN order_screenshot o ON r.id=o.record_id 
-        #             LEFT JOIN comment_screenshot c ON r.id=c.record_id"""
-        sql = """SELECT r.platform, r.date, h.name, r.comment_date, r.is_comment, r.payor, r.pay_channel, 
-                    r.payment, r.is_paid, r.resident, r.tel, 
+        sql = """SELECT p.name, r.date, h.name, r.comment_date, IIF(r.is_comment=0, '否', '是'), r.payor, 
+                    CASE r.pay_channel 
+                        WHEN 0 THEN '微信' 
+                        WHEN 1 THEN '支付宝' 
+                        WHEN 2 THEN '其他' 
+                    END AS pay_channel, r.payment, IIF(r.is_paid=0, '否', '是'), r.resident, r.tel, 
                     (SELECT GROUP_CONCAT(o.filepath, ',') AS order_imgs FROM order_screenshot o ) AS OM, 
-                    (SELECT GROUP_CONCAT(c.filepath, ',') AS comment_imgs FROM comment_screenshot c) AS CM 
-                    FROM records r 
-                    LEFT JOIN hotels h ON r.hotel_id = h.id"""
+                    (SELECT GROUP_CONCAT(c.filepath, ',') AS comment_imgs FROM comment_screenshot c) AS CM, 
+                    r.ip_addr, r.id FROM records r 
+                    LEFT JOIN hotels h ON r.hotel_id = h.id 
+                    LEFT JOIN platforms p ON r.platform = p.id"""
         self.cur.execute(sql)
         res = self.cur.fetchall()
         if res:

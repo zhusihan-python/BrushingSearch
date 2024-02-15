@@ -67,7 +67,7 @@ Item {
                 implicitHeight: 25
 
                 onClicked: {
-                    if ( history_table_view.selectedRows.size > 0 ) {
+                    if ( mRecord_tbview.selectedRows.size > 0 ) {
                         export_type = 0;
                         mRFileDialog.open();
                     } else {
@@ -83,28 +83,26 @@ Item {
                  onAccepted: {
                     // console.log("User has selected " + mRFileDialog.selectedFile, destination);
                     mRFileDialog.close();
-                    pdfWriter.write_to_file_path(destination.toString(), [...history_table_view.selectedRows], export_type);
+                    pdfWriter.write_to_file_path(destination.toString(), [...mRecord_tbview.selectedRows], export_type);
                 }
             }
         }
 
         Rectangle {
-            id: historyTable
-            width: 1720
-            // height: 780
+            id: mRecordTable
             border {
                 color: "grey"
                 width: 1
             }
 
             property int verHeaderHeight: 20
-            property int verHeaderWidth: 50
+            property int verHeaderWidth: 1
             property int horHeaderHeight: 20
             property int horHeaderWidth: 30
             property color scrollBarColor: Qt.lighter("grey")
             property int scrollBarWidth: 6
             // property int finished: 0
-            property variant columnWidthArr: [150, 150, 360, 150, 160, 160, 150, 360]
+            property variant columnWidthArr: [80, 120, 200, 120, 80, 80, 80, 80, 80, 120, 120, 280, 280, 90]
 
             anchors {
                 // bottom: parent.bottom
@@ -113,15 +111,17 @@ Item {
                 bottom: parent.bottom
                 bottomMargin: 15
                 left: parent.left
-                leftMargin: 10
+                leftMargin: 5
+                right: parent.right
+                rightMargin: 5
             }
 
             TableView {
-                id: history_table_view
+                id: mRecord_tbview
                 anchors {
                     fill: parent
-                    leftMargin: historyTable.verHeaderWidth
-                    topMargin: historyTable.horHeaderHeight
+                    leftMargin: mRecordTable.verHeaderWidth
+                    topMargin: mRecordTable.horHeaderHeight
                     bottomMargin: 1
                 }
 
@@ -133,14 +133,14 @@ Item {
                 property var selectedRows: new Set()
 
                 rowHeightProvider: function (row) {
-                    return historyTable.verHeaderHeight;
+                    return mRecordTable.verHeaderHeight;
                 }
 
                 columnWidthProvider: function (column) {
-                    return historyTable.columnWidthArr[column];
+                    return mRecordTable.columnWidthArr[column];
                 }
 
-                model: machineModel
+                model: machineRecordModel
 
                 delegate: DelegateChooser {
                     DelegateChoice {
@@ -166,8 +166,8 @@ Item {
             }
 
             Rectangle {
-                width: historyTable.verHeaderWidth
-                height: historyTable.verHeaderHeight
+                width: mRecordTable.verHeaderWidth
+                height: mRecordTable.verHeaderHeight
                 color: "#F8F8F8"
                 anchors {
                     top: parent.top
@@ -191,11 +191,11 @@ Item {
 
                 anchors {
                     top: parent.top
-                    topMargin: historyTable.verHeaderHeight
+                    topMargin: mRecordTable.verHeaderHeight
                     bottom: parent.bottom
                     bottomMargin: 1
                 }
-                topPadding: -history_table_view.contentY
+                topPadding: -mRecord_tbview.contentY
                 z: 2
                 clip: true
                 // spacing: 1
@@ -208,9 +208,9 @@ Item {
                 anchors{
                     left: parent.left
                     right: parent.right
-                    leftMargin: historyTable.verHeaderWidth
+                    leftMargin: mRecordTable.verHeaderWidth
                 }
-                height: historyTable.horHeaderHeight
+                height: mRecordTable.horHeaderHeight
                 z: 2
                 //暂存鼠标拖动的位置
                 property int posXTemp: 0
@@ -218,10 +218,10 @@ Item {
                     anchors.fill: parent
                     onPressed: header_horizontal.posXTemp=mouseX;
                     onPositionChanged: {
-                        if (history_table_view.contentX + (header_horizontal.posXTemp-mouseX)>0) {
-                            history_table_view.contentX += (header_horizontal.posXTemp-mouseX);
+                        if (mRecord_tbview.contentX + (header_horizontal.posXTemp-mouseX)>0) {
+                            mRecord_tbview.contentX += (header_horizontal.posXTemp-mouseX);
                         } else {
-                            history_table_view.contentX=0;
+                            mRecord_tbview.contentX=0;
                         }
                         header_horizontal.posXTemp=mouseX;
                     }
@@ -230,26 +230,26 @@ Item {
                 Row {
                     id: header_horizontal_row
                     anchors.fill: parent
-                    leftPadding: -history_table_view.contentX
+                    leftPadding: -mRecord_tbview.contentX
                     clip: true
                     spacing: 0
         
                     Repeater {
-                        model: history_table_view.columns > 0 ? history_table_view.columns : 0
+                        model: mRecord_tbview.columns > 0 ? mRecord_tbview.columns : 0
         
                         Rectangle {
                             id: reagent_header_horizontal
-                            width: history_table_view.columnWidthProvider(index)+history_table_view.columnSpacing
-                            height: historyTable.horHeaderHeight
+                            width: mRecord_tbview.columnWidthProvider(index)+mRecord_tbview.columnSpacing
+                            height: mRecordTable.horHeaderHeight
 
                             Rectangle {
                                 id: headerItemBg
-                                height: historyTable.horHeaderHeight
+                                height: mRecordTable.horHeaderHeight
                                 anchors.fill: parent
 
                                 Canvas {
                                     implicitWidth: reagent_header_horizontal.width;
-                                    implicitHeight: historyTable.horHeaderHeight;
+                                    implicitHeight: mRecordTable.horHeaderHeight;
                                     onPaint: {
                                         var ctx = getContext("2d");
                                         var gradient = ctx.createLinearGradient(0, 0, 0, 32);
@@ -278,7 +278,7 @@ Item {
         
                             Text {
                                 anchors.centerIn: parent
-                                text: machineModel.headerData(index, Qt.Horizontal)
+                                text: machineRecordModel.headerData(index, Qt.Horizontal)
                             }
 
                             MouseArea {
@@ -294,9 +294,9 @@ Item {
                                         reagent_header_horizontal.width=10;
                                     }
                                     header_horizontal.posXTemp=mouseX;
-                                    historyTable.columnWidthArr[index]=(reagent_header_horizontal.width-history_table_view.columnSpacing);
+                                    mRecordTable.columnWidthArr[index]=(reagent_header_horizontal.width-mRecord_tbview.columnSpacing);
                                     //刷新布局，这样宽度才会改变
-                                    history_table_view.forceLayout();
+                                    mRecord_tbview.forceLayout();
                                 }
                             }
                         }

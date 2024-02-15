@@ -132,15 +132,6 @@ Item {
                                                 machineTableArea.width/7, machineTableArea.width/7, 
                                                 machineTableArea.width/7]
 
-            anchors {
-                top: machinePageFilter.bottom
-                topMargin: 10
-                bottom: parent.bottom
-                bottomMargin: 15
-                left: parent.left
-                leftMargin: 10
-            }
-
             TableView {
                 id: machine_table_view
                 anchors {
