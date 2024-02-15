@@ -143,6 +143,32 @@ Item {
                 model: machineRecordModel
 
                 delegate: DelegateChooser {
+                    // role: "role"
+                    DelegateChoice {
+                        column: 12
+                        // roleValue: "order_img"
+                        delegate: Item {
+                                    id: photoFrame
+                                    width: 100
+                                    height: 40
+                                    clip: true
+
+                                    Image {
+                                        id: imageItem
+                                        focus: true
+                                        width: 40
+                                        height: 40
+                                        source : "file:///F:/projects/BrushingSearch/images/images/fingerprint.png"
+                                        MouseArea {
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                // popupImage.source = "file:///F:/projects/BrushingSearch/images/images/fingerprint.png";
+                                                popup.visible = true;
+                                            }
+                                        }
+                                    }
+                                }
+                    }
                     DelegateChoice {
                         delegate: Rectangle {
                                 color: (model.row %2 ===0) ? "white": "#F6F6F6";
@@ -304,6 +330,107 @@ Item {
                 }
             }
         }
+    }
+
+    Rectangle {
+        id: popup
+        width: 600
+        height: 400
+        color: "transparent"
+        visible: false
+
+        anchors.centerIn: parent
+
+        property ListModel model: ListModel {
+                id: imgModel
+                ListElement { source: "file:///E:/data/captures_468_2/flat_000_003.jpg" }
+                ListElement { source: "file:///E:/data/captures_468_2/flat_000_004.jpg" }
+                ListElement { source: "file:///E:/data/captures_468_2/flat_000_005.jpg" }
+            }
+        property int itemCount: 5
+
+        PathView{
+            id: pathView
+            model: popup.model
+            delegate: Item {
+                id:delegateItem
+                width: 200
+                height: 200
+                z: PathView.iconZ
+                scale: PathView.iconScale
+
+                Image{
+                    id:image
+                    source: model.source
+                    width: delegateItem.width
+                    height: delegateItem.height
+                }
+                ShaderEffect {
+                    anchors.top: image.bottom
+                    width: image.width
+                    height: image.height;
+                    anchors.left: image.left
+                    property variant source: image;
+                    property size sourceSize: Qt.size(0.5 / image.width, 0.5 / image.height);
+                    fragmentShader:
+                            "varying highp vec2 qt_TexCoord0;
+                            uniform lowp sampler2D source;
+                            uniform lowp vec2 sourceSize;
+                            uniform lowp float qt_Opacity;
+                            void main() {
+
+                                lowp vec2 tc = qt_TexCoord0 * vec2(1, -1) + vec2(0, 1);
+                                lowp vec4 col = 0.25 * (texture2D(source, tc + sourceSize) + texture2D(source, tc- sourceSize)
+                                + texture2D(source, tc + sourceSize * vec2(1, -1))
+                                + texture2D(source, tc + sourceSize * vec2(-1, 1)));
+                                gl_FragColor = col * qt_Opacity * (1.0 - qt_TexCoord0.y) * 0.2;
+                            }"
+                }
+
+                transform: Rotation{
+                    origin.x:image.width/2.0
+                    origin.y:image.height/2.0
+                    axis{x:0;y:1;z:0}
+                    angle: delegateItem.PathView.iconAngle
+                }
+            }
+            path:coverFlowPath
+            pathItemCount: popup.itemCount
+            anchors.fill: parent
+
+            preferredHighlightBegin: 0.5
+            preferredHighlightEnd: 0.5
+
+        }
+
+        Path{
+            id:coverFlowPath
+            startX: 0
+            startY: popup.height/3
+
+            PathAttribute{name:"iconZ";value: 0}
+            PathAttribute{name:"iconAngle";value: 70}
+            PathAttribute{name:"iconScale";value: 0.6}
+            PathLine{x:popup.width/2;y:popup.height/3}
+
+            PathAttribute{name:"iconZ";value: 100}
+            PathAttribute{name:"iconAngle";value: 0}
+            PathAttribute{name:"iconScale";value: 1.0}
+
+            PathLine{x:popup.width;y:popup.height/3}
+            PathAttribute{name:"iconZ";value: 0}
+            PathAttribute{name:"iconAngle";value: -70}
+            PathAttribute{name:"iconScale";value: 0.6}
+            PathPercent{value:1.0}
+
+        }
+
+        // MouseArea {
+        //     anchors.fill: parent
+        //     onClicked: {
+        //         popup.visible = false;
+        //     }
+        // }
     }
 
     Component.onCompleted: {
