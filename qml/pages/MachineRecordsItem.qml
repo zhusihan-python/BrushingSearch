@@ -149,24 +149,43 @@ Item {
                         // roleValue: "order_img"
                         delegate: Item {
                                     id: photoFrame
-                                    width: 100
-                                    height: 40
+                                    width: 280
+                                    height: 20
                                     clip: true
 
-                                    Image {
-                                        id: imageItem
-                                        focus: true
-                                        width: 40
-                                        height: 40
-                                        source : "file:///F:/projects/BrushingSearch/images/images/fingerprint.png"
-                                        MouseArea {
-                                            anchors.fill: parent
-                                            onClicked: {
-                                                // popupImage.source = "file:///F:/projects/BrushingSearch/images/images/fingerprint.png";
-                                                popup.visible = true;
+                                    Row {
+                                        width: parent.width
+                                        spacing: 5
+                                        Repeater {
+                                            anchors.centerIn: parent
+                                            model: 3
+                                            Text {
+                                                text: "图片"+(index+1).toString()
+                                                color: "blue"
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onPressed: {
+                                                        pathView.currentIndex = index;
+                                                        popup.visible = true;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
+                                    // Image {
+                                    //     id: imageItem
+                                    //     focus: true
+                                    //     width: 40
+                                    //     height: 40
+                                    //     source : "file:///F:/projects/BrushingSearch/images/images/fingerprint.png"
+                                    //     MouseArea {
+                                    //         anchors.fill: parent
+                                    //         onClicked: {
+                                    //             // popupImage.source = "file:///F:/projects/BrushingSearch/images/images/fingerprint.png";
+                                    //             popup.visible = true;
+                                    //         }
+                                    //     }
+                                    // }
                                 }
                     }
                     DelegateChoice {
@@ -332,12 +351,13 @@ Item {
         }
     }
 
-    Rectangle {
+    Popup {
         id: popup
         width: 600
         height: 400
-        color: "transparent"
+        // color: "transparent"
         visible: false
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
         anchors.centerIn: parent
 
@@ -354,8 +374,8 @@ Item {
             model: popup.model
             delegate: Item {
                 id:delegateItem
-                width: 200
-                height: 200
+                width: 300
+                height: 300
                 z: PathView.iconZ
                 scale: PathView.iconScale
 
@@ -365,27 +385,14 @@ Item {
                     width: delegateItem.width
                     height: delegateItem.height
                 }
-                ShaderEffect {
-                    anchors.top: image.bottom
-                    width: image.width
-                    height: image.height;
-                    anchors.left: image.left
-                    property variant source: image;
-                    property size sourceSize: Qt.size(0.5 / image.width, 0.5 / image.height);
-                    fragmentShader:
-                            "varying highp vec2 qt_TexCoord0;
-                            uniform lowp sampler2D source;
-                            uniform lowp vec2 sourceSize;
-                            uniform lowp float qt_Opacity;
-                            void main() {
-
-                                lowp vec2 tc = qt_TexCoord0 * vec2(1, -1) + vec2(0, 1);
-                                lowp vec4 col = 0.25 * (texture2D(source, tc + sourceSize) + texture2D(source, tc- sourceSize)
-                                + texture2D(source, tc + sourceSize * vec2(1, -1))
-                                + texture2D(source, tc + sourceSize * vec2(-1, 1)));
-                                gl_FragColor = col * qt_Opacity * (1.0 - qt_TexCoord0.y) * 0.2;
-                            }"
-                }
+                // ShaderEffect {
+                //     anchors.top: image.bottom
+                //     width: image.width
+                //     height: image.height;
+                //     anchors.left: image.left
+                //     property variant source: image;
+                //     property size sourceSize: Qt.size(0.5 / image.width, 0.5 / image.height);
+                // }
 
                 transform: Rotation{
                     origin.x:image.width/2.0
