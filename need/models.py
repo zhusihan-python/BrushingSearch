@@ -1,4 +1,6 @@
+import os
 from PySide6.QtCore import QAbstractTableModel, QAbstractListModel, Qt, QModelIndex, Slot
+from PySide6.QtGui import QGuiApplication
 from need.db.db_model import db_model
 
 
@@ -237,34 +239,23 @@ class MachineRecordModel(QAbstractTableModel):
     def roleNames(self):
         return self._roles
 
-    def get_machine_id(self, index):
-        hotel_id = 0
+    @Slot(int, result='QVariantList')
+    def get_comment_imgs(self, index):
+        comment_imgs = []
+        root_dir = os.path.dirname(QGuiApplication.arguments()[0])
         if index >=0 and index <= len(self.raw):
-            hotel_id = self.raw[index][-1]
-        return hotel_id
+            comment_imgs = self.raw[index][11].split(',')
+            comment_imgs = ["file:///" + root_dir + "/data/" + img for img in comment_imgs]
+        return comment_imgs
 
-    @Slot(int, result=str)
-    def get_name(self, index):
-        name = ""
+    @Slot(int, result='QVariantList')
+    def get_order_imgs(self, index):
+        order_imgs = []
+        root_dir = os.path.dirname(QGuiApplication.arguments()[0])
         if index >=0 and index <= len(self.raw):
-            name = self.raw[index][0]
-        return name
-
-    @Slot(str, str, str, str, str, str)
-    def add_machine(self, number, tele, person, card_type, card_fee, operator):
-        db_model.insert_machine(number, tele, person, card_type, card_fee, operator)
-
-    @Slot(str, str, str, str, str)
-    def alter_machine(self, index, tele, person, card_type, card_fee, operator):
-        machine_id = self.get_machine_id(index)
-        if machine_id > 0:
-            db_model.update_machine(tele, person, card_type, card_fee, operator, machine_id)
-
-    @Slot(int)
-    def del_machine(self, index):
-        machine_id = self.get_machine_id(index)
-        if machine_id > 0:
-            db_model.remove_machine(machine_id)
+            order_imgs = self.raw[index][12].split(',')
+            order_imgs = ["file:///" + root_dir + "/data/" + img for img in order_imgs]
+        return order_imgs
 
 
 machine_record_model = MachineRecordModel()

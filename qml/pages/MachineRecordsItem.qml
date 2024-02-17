@@ -7,6 +7,7 @@ import "../components"
 Item {
     property string destination: mRFileDialog.selectedFile
     property int export_type: 0
+    property ListModel imgModel: ListModel {}
     Rectangle {
         anchors.fill: parent
         color: "#e6eef6"
@@ -143,7 +144,48 @@ Item {
                 model: machineRecordModel
 
                 delegate: DelegateChooser {
-                    // role: "role"
+                    DelegateChoice {
+                        column: 11
+                        delegate: Item {
+                                    id: commentFrame
+                                    width: 280
+                                    height: 20
+                                    clip: true
+
+                                    Row {
+                                        width: parent.width
+                                        spacing: 5
+                                        Repeater {
+                                            id: commentReapter
+                                            property int imageCount: 0
+                                            model: imageCount
+                                            Text {
+                                                color: "blue"
+                                                MouseArea {
+                                                    anchors.fill: parent
+                                                    onPressed: {
+                                                        let comment_imgs = machineRecordModel.get_comment_imgs(row);
+                                                        imgModel.clear();
+                                                        for (let j=0;j<comment_imgs.length;j++) {
+                                                            imgModel.append({"source": comment_imgs[j]});
+                                                        }
+                                                        pathView.model = imgModel;
+                                                        pathView.currentIndex = index;
+                                                        popup.visible = true;
+                                                    }
+                                                }
+                                            }
+                                            Component.onCompleted: {
+                                                let splitted = display.split(',');
+                                                imageCount = splitted.length;
+                                                for (let i=0;i<imageCount;i++) {
+                                                    commentReapter.itemAt(i).text = "图片"+(i+1).toString();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                    }
                     DelegateChoice {
                         column: 12
                         // roleValue: "order_img"
@@ -157,35 +199,34 @@ Item {
                                         width: parent.width
                                         spacing: 5
                                         Repeater {
-                                            anchors.centerIn: parent
-                                            model: 3
+                                            id: imageReapter
+                                            property int imageCount: 0
+                                            model: imageCount
                                             Text {
-                                                text: "图片"+(index+1).toString()
                                                 color: "blue"
                                                 MouseArea {
                                                     anchors.fill: parent
                                                     onPressed: {
+                                                        let order_imgs = machineRecordModel.get_order_imgs(row);
+                                                        imgModel.clear();
+                                                        for (let j=0;j<order_imgs.length;j++) {
+                                                            imgModel.append({"source": order_imgs[j]});
+                                                        }
+                                                        pathView.model = imgModel;
                                                         pathView.currentIndex = index;
                                                         popup.visible = true;
                                                     }
                                                 }
                                             }
+                                            Component.onCompleted: {
+                                                let splitted = display.split(',');
+                                                imageCount = splitted.length;
+                                                for (let i=0;i<imageCount;i++) {
+                                                    imageReapter.itemAt(i).text = "图片"+(i+1).toString();
+                                                }
+                                            }
                                         }
                                     }
-                                    // Image {
-                                    //     id: imageItem
-                                    //     focus: true
-                                    //     width: 40
-                                    //     height: 40
-                                    //     source : "file:///F:/projects/BrushingSearch/images/images/fingerprint.png"
-                                    //     MouseArea {
-                                    //         anchors.fill: parent
-                                    //         onClicked: {
-                                    //             // popupImage.source = "file:///F:/projects/BrushingSearch/images/images/fingerprint.png";
-                                    //             popup.visible = true;
-                                    //         }
-                                    //     }
-                                    // }
                                 }
                     }
                     DelegateChoice {
@@ -355,23 +396,18 @@ Item {
         id: popup
         width: 600
         height: 400
-        // color: "transparent"
         visible: false
+        background: Rectangle {
+            color: "transparent"
+            // border.color: "black"
+        }
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
         anchors.centerIn: parent
-
-        property ListModel model: ListModel {
-                id: imgModel
-                ListElement { source: "file:///E:/data/captures_468_2/flat_000_003.jpg" }
-                ListElement { source: "file:///E:/data/captures_468_2/flat_000_004.jpg" }
-                ListElement { source: "file:///E:/data/captures_468_2/flat_000_005.jpg" }
-            }
-        property int itemCount: 5
-
+        property int itemCount: 3
         PathView{
             id: pathView
-            model: popup.model
+            model: imgModel
             delegate: Item {
                 id:delegateItem
                 width: 300
@@ -385,14 +421,6 @@ Item {
                     width: delegateItem.width
                     height: delegateItem.height
                 }
-                // ShaderEffect {
-                //     anchors.top: image.bottom
-                //     width: image.width
-                //     height: image.height;
-                //     anchors.left: image.left
-                //     property variant source: image;
-                //     property size sourceSize: Qt.size(0.5 / image.width, 0.5 / image.height);
-                // }
 
                 transform: Rotation{
                     origin.x:image.width/2.0
@@ -431,13 +459,6 @@ Item {
             PathPercent{value:1.0}
 
         }
-
-        // MouseArea {
-        //     anchors.fill: parent
-        //     onClicked: {
-        //         popup.visible = false;
-        //     }
-        // }
     }
 
     Component.onCompleted: {
