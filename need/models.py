@@ -323,7 +323,6 @@ class HotelCombo(QAbstractListModel):
         self.raw = db_model.search_hotels(hotel_name)
         self.beginResetModel()
         self.lst = [hotel[0] for hotel in self.raw]
-        print("self.lst", self.lst)
         self.endResetModel()
 
     def rowCount(self, idx: QModelIndex=None) -> int:
@@ -334,12 +333,10 @@ class HotelCombo(QAbstractListModel):
         return default
 
     def data(self, index, role):
-        print("role", role)
         if not index.isValid():
             return None
 
         if role == Qt.DisplayRole:
-            print("self.lst[index.row()]", self.lst[index.row()])
             return self.lst[index.row()]
 
         if role == Qt.UserRole:
