@@ -176,10 +176,12 @@ Item {
                                                 }
                                             }
                                             Component.onCompleted: {
-                                                let splitted = display.split(',');
-                                                imageCount = splitted.length;
-                                                for (let i=0;i<imageCount;i++) {
-                                                    commentReapter.itemAt(i).text = "图片"+(i+1).toString();
+                                                if (typeof(display) === 'string' && display.length > 0) {
+                                                    let splitted = display.split(',');
+                                                    imageCount = splitted.length;
+                                                    for (let i=0;i<imageCount;i++) {
+                                                        commentReapter.itemAt(i).text = "图片"+(i+1).toString();
+                                                    }
                                                 }
                                             }
                                         }
@@ -219,10 +221,12 @@ Item {
                                                 }
                                             }
                                             Component.onCompleted: {
-                                                let splitted = display.split(',');
-                                                imageCount = splitted.length;
-                                                for (let i=0;i<imageCount;i++) {
-                                                    imageReapter.itemAt(i).text = "图片"+(i+1).toString();
+                                                if (typeof(display) === 'string' && display.length > 0) {
+                                                    let splitted = display.split(',');
+                                                    imageCount = splitted.length;
+                                                    for (let i=0;i<imageCount;i++) {
+                                                        imageReapter.itemAt(i).text = "图片"+(i+1).toString();
+                                                    }
                                                 }
                                             }
                                         }
