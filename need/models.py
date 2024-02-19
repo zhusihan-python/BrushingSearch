@@ -310,3 +310,42 @@ class PlatformCombo(QAbstractListModel):
 
 platform_combo = PlatformCombo()
 platform_combo.init_data()
+
+
+class HotelCombo(QAbstractListModel):
+    def __init__(self) -> None:
+        super().__init__()
+        self.raw = []
+        self.lst = []
+
+    @Slot(str)
+    def init_data(self, hotel_name):
+        self.raw = db_model.search_hotels(hotel_name)
+        self.beginResetModel()
+        self.lst = [hotel[0] for hotel in self.raw]
+        print("self.lst", self.lst)
+        self.endResetModel()
+
+    def rowCount(self, idx: QModelIndex=None) -> int:
+        return len(self.lst)
+
+    def roleNames(self):
+        default = super().roleNames()
+        return default
+
+    def data(self, index, role):
+        print("role", role)
+        if not index.isValid():
+            return None
+
+        if role == Qt.DisplayRole:
+            print("self.lst[index.row()]", self.lst[index.row()])
+            return self.lst[index.row()]
+
+        if role == Qt.UserRole:
+            return 99
+        return
+
+
+hotel_combo = HotelCombo()
+hotel_combo.init_data("")

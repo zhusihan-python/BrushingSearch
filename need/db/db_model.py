@@ -27,6 +27,14 @@ class DBModels(object):
             return res
         return []
 
+    def search_hotels(self, name):
+        sql = f"""SELECT name, id FROM hotels WHERE name LIKE '%{name}%'"""
+        self.cur.execute(sql)
+        res = self.cur.fetchall()
+        if res:
+            return res
+        return []
+
     def insert_hotel(self, name, addr, contacts, tel):
         sql = f"""INSERT INTO hotels (name, addr, contacts, tel) VALUES 
                     ('{name}', '{addr}', '{contacts}', '{tel}')"""
@@ -102,5 +110,5 @@ db_model = DBModels()
 
 
 if __name__ == "__main__":
-    machine_records = db_model.get_machine_records()
-    print("machine_records", machine_records)
+    hotels = db_model.search_hotels('a')
+    print("hotels", hotels)

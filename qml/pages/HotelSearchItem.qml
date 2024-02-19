@@ -39,19 +39,21 @@ Item {
                     }
                 }
 
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: {
-                        item_pop.open();
-                    }
-                }
+                // MouseArea{
+                //     anchors.fill: parent
+                //     onClicked: {
+                //         item_pop.open();
+                //     }
+                // }
 
                 onTextChanged: {
                     // 模糊搜索逻辑
                     if (length > lengthLimit) remove(lengthLimit, length);
-                    hotelNameTxt.listModel.clear();
+                    // hotelNameTxt.listModel.clear();
                     if (text) {
                         // 从数据源搜索过滤结果到listModel
+                        hotelCombo.init_data(text);
+                        item_pop.open();
                     }
                 }
 
@@ -59,20 +61,49 @@ Item {
                     id: item_pop
                     y: hotelNameTxt.height
                     width: hotelNameTxt.width
-                    height: 150
+                    height: 160
 
                     ListView {
-                        id: listView
-                        model: hotelNameTxt.listModel
-                        height: parent.height
-                        width: parent.width
+                        id: hotelLView
+                        model: hotelCombo
+                        height: 150
+                        width: 190
                         
                         delegate: ItemDelegate {
-                            text: model.text
-                            width: parent.width
-                            onClicked: {
-                                hotelNameTxt.text = model.text
-                                item_pop.close()
+                                    width: 190
+                                    height: 20
+                                    text: model.display
+                                    background: Rectangle {
+                                        width: 180
+                                        radius: 5
+                                        color: {
+                                            if (parent.hovered)
+                                                return "lightsteelblue";
+                                            return "white";
+                                        }
+                                    }
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            item_pop.close();
+                                            hotelNameTxt.text = model.display;
+                                        }
+                                    }
+                                }
+                        focus: true
+                        keyNavigationWraps: true
+                        ScrollBar.vertical: ScrollBar {
+                            id: control
+                            size: 0.3
+                            width: 10
+                            policy: ScrollBar.AlwaysOn
+
+                            contentItem: Rectangle {
+                                implicitWidth: 3
+                                implicitHeight: 100
+                                radius: width / 2
+                                color: control.pressed ? "darkgrey" : "lightgrey"
+                                opacity: control.policy === ScrollBar.AlwaysOn || (control.active && control.size < 1.0) ? 0.75 : 0
                             }
                         }
                     }
