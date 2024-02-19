@@ -39,13 +39,6 @@ Item {
                     }
                 }
 
-                // MouseArea{
-                //     anchors.fill: parent
-                //     onClicked: {
-                //         item_pop.open();
-                //     }
-                // }
-
                 onTextChanged: {
                     // 模糊搜索逻辑
                     if (length > lengthLimit) remove(lengthLimit, length);
@@ -86,7 +79,7 @@ Item {
                                         anchors.fill: parent
                                         onClicked: {
                                             item_pop.close();
-                                            hotelNameTxt.text = model.display;
+                                            hotelText.text = model.display;
                                         }
                                     }
                                 }
@@ -111,7 +104,7 @@ Item {
             }
 
             CustomButton {
-                id: historyRecentWeekBtn
+                id: hotelQueryBtn
                 text: qsTr("查询")
                 colorPressed: "#55aaff"
                 colorMouseOver: "#40405f"
@@ -119,6 +112,25 @@ Item {
 
                 width: 100
                 height: 25
+            }
+
+            Label {
+                id: hotelLabel
+                width: 60
+                height: 25
+                text: "酒店："
+                font.bold: true
+                font.pointSize: 10
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            Text {
+                id: hotelText
+                text: ""
+                width: 150
+                height: 25
+                font.pointSize: 10
+                verticalAlignment: Text.AlignVCenter
             }
 
             Label {
