@@ -6,6 +6,7 @@ import Qt.labs.qmlmodels 1.0
 import "../components"
 
 Item {
+    property int hotel_id: -1
     Rectangle {
         anchors.fill: parent
         color: "#e6eef6"
@@ -80,6 +81,9 @@ Item {
                                         onClicked: {
                                             item_pop.close();
                                             hotelText.text = model.display;
+                                            hotel_id = hotelCombo.get_hotel_id(index);
+                                            machineRecordDoneCombo.init_data(hotel_id, paltformSelector.currentIndex);
+                                            machineRecordUndoCombo.init_data(hotel_id, paltformSelector.currentIndex);
                                         }
                                     }
                                 }
@@ -149,6 +153,10 @@ Item {
                 height: 25
                 model: platformCombo
                 textRole: "display"
+                onCurrentIndexChanged: {
+                    machineRecordDoneCombo.init_data(hotel_id, paltformSelector.currentIndex);
+                    machineRecordUndoCombo.init_data(hotel_id, paltformSelector.currentIndex);
+                }
             }
         }
 
@@ -205,16 +213,7 @@ Item {
                                 id: doList
                                 anchors.fill: parent
                                 anchors.margins: 10
-                                model: ListModel {
-                                    id: doChoice
-                                    ListElement { text: "1号机" }
-                                    ListElement { text: "2号机" }
-                                    ListElement { text: "3号机" }
-                                    ListElement { text: "4号机" }
-                                    ListElement { text: "5号机" }
-                                    ListElement { text: "6号机" }
-                                    ListElement { text: "7号机" }
-                                }
+                                model: machineRecordDoneCombo
                                 snapMode: ListView.SnapToItem
                                 clip: true
 
@@ -226,7 +225,7 @@ Item {
                                                 left: parent.left
                                                 verticalCenter: parent.verticalCenter
                                             }
-                                            text: model.text
+                                            text: display
                                             font.pointSize: 10
                                             horizontalAlignment: Text.AlignLeft
                                             verticalAlignment: Text.AlignVCenter
@@ -301,16 +300,7 @@ Item {
                                 id: undoList
                                 anchors.fill: parent
                                 anchors.margins: 10
-                                model: ListModel {
-                                    id: undoChoice
-                                    ListElement { text: "8号机" }
-                                    ListElement { text: "9号机" }
-                                    ListElement { text: "10号机" }
-                                    ListElement { text: "11号机" }
-                                    ListElement { text: "12号机" }
-                                    ListElement { text: "13号机" }
-                                    ListElement { text: "14号机" }
-                                }
+                                model: machineRecordUndoCombo
                                 snapMode: ListView.SnapToItem
                                 clip: true
 
@@ -322,7 +312,7 @@ Item {
                                                 left: parent.left
                                                 verticalCenter: parent.verticalCenter
                                             }
-                                            text: model.text
+                                            text: display
                                             font.pointSize: 10
                                             horizontalAlignment: Text.AlignLeft
                                             verticalAlignment: Text.AlignVCenter

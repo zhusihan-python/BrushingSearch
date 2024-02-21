@@ -103,7 +103,33 @@ class DBModels(object):
         res = self.cur.fetchall()
         if res:
             return res
-        return []        
+        return []
+
+    def search_machines_done(self, hotel_id, platform_id):
+        if hotel_id != -1:
+            sql = f"""SELECT number, id FROM machines WHERE id IN 
+                    (SELECT machine_no FROM records WHERE hotel_id={hotel_id} AND platform={platform_id})"""
+        else:
+            sql = f"""SELECT number, id FROM machines WHERE id IN 
+                    (SELECT machine_no FROM records WHERE platform={platform_id})"""
+        self.cur.execute(sql)
+        res = self.cur.fetchall()
+        if res:
+            return res
+        return []
+
+    def search_machines_undo(self, hotel_id, platform_id):
+        if hotel_id != -1:
+            sql = f"""SELECT number, id FROM machines WHERE id NOT IN 
+                    (SELECT machine_no FROM records WHERE hotel_id={hotel_id} AND platform={platform_id})"""
+        else:
+            sql = f"""SELECT number, id FROM machines WHERE id NOT IN 
+                    (SELECT machine_no FROM records WHERE platform={platform_id})"""
+        self.cur.execute(sql)
+        res = self.cur.fetchall()
+        if res:
+            return res
+        return []
 
 
 db_model = DBModels()

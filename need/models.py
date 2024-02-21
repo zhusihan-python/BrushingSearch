@@ -54,6 +54,7 @@ class HotelModel(QAbstractTableModel):
     def roleNames(self):
         return self._roles
 
+    @Slot(int, result=int)
     def get_hotel_id(self, index):
         hotel_id = 0
         if index >=0 and index <= len(self.raw):
@@ -332,6 +333,14 @@ class HotelCombo(QAbstractListModel):
         default = super().roleNames()
         return default
 
+    @Slot(int, result=int)
+    def get_hotel_id(self, index: int):
+        print("index", index)
+        if index >=0 and index < len(self.lst):
+            print("self.raw[index][-1]", self.raw[index][-1])
+            return self.raw[index][-1]
+        return -1
+
     def data(self, index, role):
         if not index.isValid():
             return None
@@ -346,3 +355,75 @@ class HotelCombo(QAbstractListModel):
 
 hotel_combo = HotelCombo()
 hotel_combo.init_data("")
+
+
+class MachineRecordDoneCombo(QAbstractListModel):
+    def __init__(self) -> None:
+        super().__init__()
+        self.raw = []
+        self.lst = []
+
+    @Slot(int, int)
+    def init_data(self, hotel_id=-1, platform_id=0):
+        self.raw = db_model.search_machines_done(hotel_id, platform_id)
+        self.beginResetModel()
+        self.lst = [machine[0] for machine in self.raw]
+        self.endResetModel()
+
+    def rowCount(self, idx: QModelIndex=None) -> int:
+        return len(self.lst)
+
+    def roleNames(self):
+        default = super().roleNames()
+        return default
+
+    def data(self, index, role):
+        if not index.isValid():
+            return None
+
+        if role == Qt.DisplayRole:
+            return self.lst[index.row()]
+
+        if role == Qt.UserRole:
+            return 99
+        return
+
+
+machine_record_done_combo = MachineRecordDoneCombo()
+machine_record_done_combo.init_data(hotel_id=-1, platform_id=0)
+
+
+class MachineRecordUndoCombo(QAbstractListModel):
+    def __init__(self) -> None:
+        super().__init__()
+        self.raw = []
+        self.lst = []
+
+    @Slot(int, int)
+    def init_data(self, hotel_id=-1, platform_id=0):
+        self.raw = db_model.search_machines_undo(hotel_id, platform_id)
+        self.beginResetModel()
+        self.lst = [machine[0] for machine in self.raw]
+        self.endResetModel()
+
+    def rowCount(self, idx: QModelIndex=None) -> int:
+        return len(self.lst)
+
+    def roleNames(self):
+        default = super().roleNames()
+        return default
+
+    def data(self, index, role):
+        if not index.isValid():
+            return None
+
+        if role == Qt.DisplayRole:
+            return self.lst[index.row()]
+
+        if role == Qt.UserRole:
+            return 99
+        return
+
+
+machine_record_undo_combo = MachineRecordUndoCombo()
+machine_record_undo_combo.init_data(hotel_id=-1, platform_id=0)
