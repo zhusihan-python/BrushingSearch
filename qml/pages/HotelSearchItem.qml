@@ -56,6 +56,7 @@ Item {
                     y: hotelNameTxt.height
                     width: hotelNameTxt.width
                     height: 160
+                    signal hotelSelected(int index)
 
                     ListView {
                         id: hotelLView
@@ -81,9 +82,7 @@ Item {
                                         onClicked: {
                                             item_pop.close();
                                             hotelText.text = model.display;
-                                            hotel_id = hotelCombo.get_hotel_id(index);
-                                            machineRecordDoneCombo.init_data(hotel_id, paltformSelector.currentIndex);
-                                            machineRecordUndoCombo.init_data(hotel_id, paltformSelector.currentIndex);
+                                            item_pop.hotelSelected(index);
                                         }
                                     }
                                 }
@@ -154,8 +153,8 @@ Item {
                 model: platformCombo
                 textRole: "display"
                 onCurrentIndexChanged: {
-                    machineRecordDoneCombo.init_data(hotel_id, paltformSelector.currentIndex);
-                    machineRecordUndoCombo.init_data(hotel_id, paltformSelector.currentIndex);
+                    machineRecordDoneCombo.init_data(hotel_id, paltformSelector.currentIndex+1);
+                    machineRecordUndoCombo.init_data(hotel_id, paltformSelector.currentIndex+1);
                 }
             }
         }
@@ -235,6 +234,12 @@ Item {
                                             anchors.fill: parent
                                             onClicked: {
                                                 doList.currentIndex = index;
+                                            }
+                                            onDoubleClicked: {
+                                                let machine_no = machineRecordDoneCombo.get_machine_no(index);
+                                                let platform_id = paltformSelector.currentIndex+1;
+                                                machineRecordModel.init_data(platform_id, hotel_id, machine_no);
+                                                homeTabBar.currentIndex = 1;
                                             }
                                         }
                                     }
@@ -350,6 +355,15 @@ Item {
                     }
                 }
             }
+        }
+    }
+    Connections {
+        target: item_pop
+
+        function onHotelSelected(index) {
+            hotel_id = hotelCombo.get_hotel_id(index);
+            machineRecordDoneCombo.init_data(hotel_id, paltformSelector.currentIndex+1);
+            machineRecordUndoCombo.init_data(hotel_id, paltformSelector.currentIndex+1);
         }
     }
 }

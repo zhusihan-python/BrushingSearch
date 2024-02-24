@@ -206,10 +206,11 @@ class MachineRecordModel(QAbstractTableModel):
                           "付款渠道", "付款金额", "是否结账", "入住人", "电话", "评论截图", 
                           "下单截图", "IP地址"]
 
-    @Slot()
-    def init_data(self):
+    @Slot(int, int, int)
+    def init_data(self, platform_id, hotel_id, machine_no):
+        print("MachineRecordModel init_data", platform_id, hotel_id, machine_no)
         self.beginResetModel()
-        self.raw = db_model.get_machine_records()
+        self.raw = db_model.get_machine_records(platform_id, hotel_id, machine_no)
         self._data = [record[:-1] for record in self.raw]
         self.endResetModel()
 
@@ -260,7 +261,7 @@ class MachineRecordModel(QAbstractTableModel):
 
 
 machine_record_model = MachineRecordModel()
-machine_record_model.init_data()
+# machine_record_model.init_data()
 
 
 class PlatformCombo(QAbstractListModel):
@@ -335,9 +336,7 @@ class HotelCombo(QAbstractListModel):
 
     @Slot(int, result=int)
     def get_hotel_id(self, index: int):
-        print("index", index)
         if index >=0 and index < len(self.lst):
-            print("self.raw[index][-1]", self.raw[index][-1])
             return self.raw[index][-1]
         return -1
 
@@ -365,6 +364,7 @@ class MachineRecordDoneCombo(QAbstractListModel):
 
     @Slot(int, int)
     def init_data(self, hotel_id=-1, platform_id=0):
+        print("MachineRecordDoneCombo init_data", hotel_id, platform_id)
         self.raw = db_model.search_machines_done(hotel_id, platform_id)
         self.beginResetModel()
         self.lst = [machine[0] for machine in self.raw]
@@ -387,6 +387,12 @@ class MachineRecordDoneCombo(QAbstractListModel):
         if role == Qt.UserRole:
             return 99
         return
+
+    @Slot(int, result=int)
+    def get_machine_no(self, index):
+        if index >=0 and index < len(self.lst):
+            return self.raw[index][-1]
+        return -1
 
 
 machine_record_done_combo = MachineRecordDoneCombo()

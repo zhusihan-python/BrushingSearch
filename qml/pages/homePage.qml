@@ -27,7 +27,7 @@ Item {
             }
 
             TabBar {
-                id: bar
+                id: homeTabBar
                 height: 30
                 width: 360
 
@@ -49,7 +49,7 @@ Item {
                         top: parent.top
                     }
                     background: Rectangle {
-                        color: bar.currentIndex == 0 ? "white" : "mediumslateblue"
+                        color: homeTabBar.currentIndex == 0 ? "white" : "mediumslateblue"
                     }
                 }
 
@@ -67,7 +67,7 @@ Item {
                         top: parent.top
                     }
                     background: Rectangle {
-                        color: bar.currentIndex == 1 ? "white" : "mediumslateblue"
+                        color: homeTabBar.currentIndex == 1 ? "white" : "mediumslateblue"
                     }
                 }
 
@@ -84,7 +84,7 @@ Item {
                         top: parent.top
                     }
                     background: Rectangle {
-                        color: bar.currentIndex == 2 ? "white" : "mediumslateblue"
+                        color: homeTabBar.currentIndex == 2 ? "white" : "mediumslateblue"
                     }
                 }
             }
@@ -97,7 +97,7 @@ Item {
                 top: barBg.bottom
                 bottom: parent.bottom
             }
-            currentIndex: bar.currentIndex
+            currentIndex: homeTabBar.currentIndex
 
             HotelSearchItem {}
             MachineRecordsItem {}
