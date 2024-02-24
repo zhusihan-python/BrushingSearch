@@ -146,11 +146,12 @@ Item {
                 delegate: DelegateChooser {
                     DelegateChoice {
                         column: 11
-                        delegate: Item {
+                        delegate: Rectangle {
                                     id: commentFrame
                                     width: 280
                                     height: 20
                                     clip: true
+                                    color: (model.row %2 ===0) ? "white": "#F6F6F6";
 
                                     Row {
                                         width: parent.width
@@ -191,11 +192,12 @@ Item {
                     DelegateChoice {
                         column: 12
                         // roleValue: "order_img"
-                        delegate: Item {
-                                    id: photoFrame
+                        delegate: Rectangle {
+                                    id: orderFrame
                                     width: 280
                                     height: 20
                                     clip: true
+                                    color: (model.row %2 ===0) ? "white": "#F6F6F6";
 
                                     Row {
                                         width: parent.width
