@@ -25,6 +25,52 @@ Item {
             anchors {
                 top: parent.top
             }
+
+            TabBar {
+                id: recordTabBar
+                height: 30
+                width: 120
+
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                }
+
+                TabButton {
+                    height: 30
+                    text: qsTr("数据录入")
+                    font {
+                        family: Style.fontAwesome
+                        bold: false
+                        pointSize: 12
+                    }
+
+                    anchors {
+                        top: parent.top
+                    }
+                    background: Rectangle {
+                        color: recordTabBar.currentIndex == 0 ? "white" : "mediumslateblue"
+                    }
+                }
+            }
+        }
+
+        StackLayout {
+            width: parent.width
+
+            anchors {
+                top: barBg.bottom
+                bottom: parent.bottom
+            }
+            currentIndex: recordTabBar.currentIndex
+
+            RecordPageItem {}
+            Item {
+                Rectangle {
+                    anchors.fill: parent
+                    color: "blue"
+                }
+            }
         }
     }
 }

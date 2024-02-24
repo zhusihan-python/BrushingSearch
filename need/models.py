@@ -208,7 +208,6 @@ class MachineRecordModel(QAbstractTableModel):
 
     @Slot(int, int, int)
     def init_data(self, platform_id, hotel_id, machine_no):
-        print("MachineRecordModel init_data", platform_id, hotel_id, machine_no)
         self.beginResetModel()
         self.raw = db_model.get_machine_records(platform_id, hotel_id, machine_no)
         self._data = [record[:-1] for record in self.raw]
@@ -364,7 +363,6 @@ class MachineRecordDoneCombo(QAbstractListModel):
 
     @Slot(int, int)
     def init_data(self, hotel_id=-1, platform_id=0):
-        print("MachineRecordDoneCombo init_data", hotel_id, platform_id)
         self.raw = db_model.search_machines_done(hotel_id, platform_id)
         self.beginResetModel()
         self.lst = [machine[0] for machine in self.raw]
