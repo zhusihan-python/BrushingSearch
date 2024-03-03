@@ -146,6 +146,14 @@ class DBModels(object):
             return res
         return []
 
+    def search_machines(self, name):
+        sql = f"""SELECT number, id FROM machines WHERE number LIKE '%{name}%'"""
+        self.cur.execute(sql)
+        res = self.cur.fetchall()
+        if res:
+            return res
+        return []
+
 
 db_model = DBModels()
 

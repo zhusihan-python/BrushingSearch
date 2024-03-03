@@ -431,3 +431,46 @@ class MachineRecordUndoCombo(QAbstractListModel):
 
 machine_record_undo_combo = MachineRecordUndoCombo()
 machine_record_undo_combo.init_data(hotel_id=-1, platform_id=0)
+
+
+class MachineCombo(QAbstractListModel):
+    def __init__(self) -> None:
+        super().__init__()
+        self.raw = []
+        self.lst = []
+
+    @Slot(str)
+    def init_data(self, machine_name):
+        self.raw = db_model.search_machines(machine_name)
+        self.beginResetModel()
+        self.lst = [machine[0] for machine in self.raw]
+        self.endResetModel()
+
+    def rowCount(self, idx: QModelIndex=None) -> int:
+        return len(self.lst)
+
+    def roleNames(self):
+        default = super().roleNames()
+        return default
+
+    @Slot(int, result=int)
+    def get_machine_number(self, index: int):
+        if index >=0 and index < len(self.lst):
+            return self.raw[index][-1]
+        return -1
+
+    def data(self, index, role):
+        if not index.isValid():
+            return None
+
+        if role == Qt.DisplayRole:
+            return self.lst[index.row()]
+
+        if role == Qt.UserRole:
+            return 99
+        return
+
+
+machine_combo = MachineCombo()
+machine_combo.init_data("")
+

@@ -7,7 +7,7 @@ from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuickControls2 import QQuickStyle
 from mainWindow import MainWindow
 from need.models import hotel_model, hotel_combo, platform_combo, machine_model, machine_record_model, \
-    machine_record_done_combo, machine_record_undo_combo
+    machine_record_done_combo, machine_record_undo_combo, machine_combo
 from need.proxy_models import hotel_proxy_model, machine_proxy_model
 
 
@@ -27,6 +27,7 @@ if __name__ == "__main__":
     engine.rootContext().setContextProperty("machineRecordModel", machine_record_model)
     engine.rootContext().setContextProperty("machineRecordDoneCombo", machine_record_done_combo)
     engine.rootContext().setContextProperty("machineRecordUndoCombo", machine_record_undo_combo)
+    engine.rootContext().setContextProperty("machineCombo", machine_combo)
 
     # Set App Extra Info
     app.setOrganizationName("华南地区总经理")
