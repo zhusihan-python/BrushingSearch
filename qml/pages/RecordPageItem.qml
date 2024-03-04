@@ -157,6 +157,308 @@ Item {
                 color: "grey"
                 width: 1
             }
+            ButtonGroup { id: paymentGroup }
+            ButtonGroup { id: paidGroup }
+            Column {
+                spacing: 20
+                anchors {
+                    top: parent.top
+                    topMargin: 20
+                    left: parent.left
+                    leftMargin: 20
+                }
+                Row {
+                    spacing: 10
+
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "酒店名称:"
+                        }
+                    }
+                    TextField {
+                        id: nameEditInput
+                        selectByMouse: true
+                        placeholderText: qsTr("不允许为空")
+
+                        property int lengthLimit: 20
+
+                        background: Rectangle {
+                            id: nameEditInputBg
+                            implicitWidth: 250; implicitHeight: 30
+                            color: nameEditInput.enabled ? "white": "transparent"
+                            property alias borderColor: nameEditInputBg.border.color
+                            border {
+                                color: nameEditInput.focus ? "#21be2b": "gray"
+                            }
+                        }
+                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
+                    }
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "代付人:"
+                        }
+                    }
+                    TextField {
+                        id: payorInput
+                        selectByMouse: true
+                        placeholderText: qsTr("不允许为空")
+
+                        property int lengthLimit: 20
+
+                        background: Rectangle {
+                            id: payorInputBg
+                            implicitWidth: 250; implicitHeight: 30
+                            color: payorInput.enabled ? "white": "transparent"
+                            property alias borderColor: payorInputBg.border.color
+                            border {
+                                color: payorInput.focus ? "#21be2b": "gray"
+                            }
+                        }
+                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
+                    }
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "金额:"
+                        }
+                    }
+                    TextField {
+                        id: moneyInput
+                        selectByMouse: true
+                        placeholderText: qsTr("不允许为空")
+                        validator: RegularExpressionValidator { regularExpression: /^(?!0\d)(\d{1,7})(\.\d{1,2})?$/ }
+                        property int lengthLimit: 20
+
+                        background: Rectangle {
+                            id: moneyInputBg
+                            implicitWidth: 250; implicitHeight: 30
+                            color: moneyInput.enabled ? "white": "transparent"
+                            property alias borderColor: moneyInputBg.border.color
+                            border {
+                                color: moneyInput.focus ? "#21be2b": "gray"
+                            }
+                        }
+                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
+                    }
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "支付方式:"
+                        }
+                    }
+                    RadioButton {
+                        text: qsTr("支付宝")
+                        ButtonGroup.group: paymentGroup
+                    }
+                    RadioButton {
+                        text: qsTr("微信")
+                        ButtonGroup.group: paymentGroup
+                    }
+                    RadioButton {
+                        text: qsTr("其他")
+                        ButtonGroup.group: paymentGroup
+                    }
+                }
+                Row {
+                    spacing: 10
+
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "入住人:"
+                        }
+                    }
+                    TextField {
+                        id: tenantInput
+                        selectByMouse: true
+                        placeholderText: qsTr("不允许为空")
+
+                        property int lengthLimit: 20
+
+                        background: Rectangle {
+                            id: tenantInputBg
+                            implicitWidth: 250; implicitHeight: 30
+                            color: tenantInput.enabled ? "white": "transparent"
+                            property alias borderColor: tenantInputBg.border.color
+                            border {
+                                color: tenantInput.focus ? "#21be2b": "gray"
+                            }
+                        }
+                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
+                    }
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "电话:"
+                        }
+                    }
+                    TextField {
+                        id: telInput
+                        selectByMouse: true
+                        placeholderText: qsTr("不允许为空")
+
+                        property int lengthLimit: 20
+
+                        background: Rectangle {
+                            id: telInputBg
+                            implicitWidth: 250; implicitHeight: 30
+                            color: telInput.enabled ? "white": "transparent"
+                            property alias borderColor: telInputBg.border.color
+                            border {
+                                color: telInput.focus ? "#21be2b": "gray"
+                            }
+                        }
+                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
+                    }
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "是否结账:"
+                        }
+                    }
+                    RadioButton {
+                        text: qsTr("是")
+                        ButtonGroup.group: paidGroup
+                    }
+                    RadioButton {
+                        text: qsTr("否")
+                        ButtonGroup.group: paidGroup
+                    }
+                }
+                Row {
+                    spacing: 10
+
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "下单日期:"
+                        }
+                    }
+                    CustomDatePicker { id: orderDatePicker }
+                    Label {
+                        width: 310
+                        height: 30
+                    }
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "评论日期:"
+                        }
+                    }
+                    CustomDatePicker { id: commentDatePicker }
+                }
+                Row {
+                    spacing: 10
+
+                    Rectangle {
+                        id: orderImgArea
+                        width: 620
+                        height: 150
+                        border.color: "gray"
+                        DropArea {
+                            id: orderImgDrop;
+                            anchors.fill: parent
+                            onEntered: (drag) => {
+                                orderImgArea.color = "gray";
+                                drag.accept (Qt.LinkAction);
+                            }
+                            onDropped: (drop) => {
+                                console.log(drop.urls)
+                                orderImgArea.color = "white"
+                            }
+                            onExited: {
+                                orderImgArea.color = "white";
+                            }
+                        }
+                    }
+                    Rectangle {
+                        id: commentImgArea
+                        width: 620
+                        height: 150
+                        border.color: "gray"
+                        DropArea {
+                            id: commentImgDrop;
+                            anchors.fill: parent
+                            onEntered: (drag) => {
+                                commentImgArea.color = "gray";
+                                drag.accept (Qt.LinkAction);
+                            }
+                            onDropped: (drop) => {
+                                console.log(drop.urls)
+                                commentImgArea.color = "white"
+                            }
+                            onExited: {
+                                commentImgArea.color = "white";
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     Connections {
