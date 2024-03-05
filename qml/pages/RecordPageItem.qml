@@ -4,9 +4,12 @@ import QtQuick.Layouts 1.5
 import Qt.labs.qmlmodels 1.0
 import assets 1.0
 import "../components"
+import "../js/messageBox.js" as MessageBox
 
 Item {
     property int machine_id: -1
+    property var orderImgModel: ListModel {}
+    property var commentImgModel: ListModel {}
     Rectangle {
         id: dataInputItem
         anchors.fill: parent
@@ -428,11 +431,61 @@ Item {
                                 drag.accept (Qt.LinkAction);
                             }
                             onDropped: (drop) => {
-                                console.log(drop.urls)
+                                console.log(drop.urls);
+                                if ((drop.urls.length + orderImgModel.count) > 5) {
+                                    MessageBox.showMessageBox("最多上传五张图片", "提示");
+                                } else {
+                                    if (drop.urls.length > 0) {
+                                        for (let i = 0;i < drop.urls.length;i++) {
+                                            orderImgModel.append({ srcFile: drop.urls[i] });
+                                        }
+                                    }
+                                }
                                 orderImgArea.color = "white"
                             }
                             onExited: {
                                 orderImgArea.color = "white";
+                            }
+                            ListView {
+                                height: 200
+                                anchors {
+                                    topMargin: 10
+                                    top: parent.top
+                                    leftMargin: 10
+                                    left: parent.left
+                                    right: parent.right
+                                }
+                                orientation: ListView.Horizontal
+                                layoutDirection: Qt.LeftToRight
+                                spacing: 10
+                                model: orderImgModel
+                                delegate: Column {
+                                    spacing: 5
+                                    Image {
+                                        width: 100; height: 100
+                                        source: srcFile
+                                        fillMode: Image.PreserveAspectFit
+                                    }
+                                    Text {
+                                        id: delText
+                                        text: "删除"
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        horizontalAlignment: Text.AlignHCenter
+                                        MouseArea {
+                                            hoverEnabled: true 
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                orderImgModel.remove(index, 1);
+                                            }
+                                            onEntered: {
+                                                delText.font.underline = true;
+                                            }
+                                            onExited: {
+                                                delText.font.underline = false;
+                                            }
+                                        }
+                                    }
+                                }                               
                             }
                         }
                     }

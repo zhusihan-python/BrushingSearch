@@ -7,7 +7,7 @@ import "../components"
 
 Item {
     Rectangle {
-        id: hotelItem
+        id: machinePageItem
         anchors.fill: parent
         color: "#e6eef6"
 
@@ -75,7 +75,7 @@ Item {
                             console.debug("Error:"+ popupComponent.errorString() );
                             return;
                     } else {
-                        let newPopup = popupComponent.createObject(hotelItem);
+                        let newPopup = popupComponent.createObject(machinePageItem);
                         newPopup.open();
                     }
                 }
@@ -98,7 +98,7 @@ Item {
                                 console.debug("Error:"+ popupComponent.errorString());
                                 return;
                         } else {
-                            let delPopup = popupComponent.createObject(hotelItem);
+                            let delPopup = popupComponent.createObject(machinePageItem);
                             delPopup.cur_name = machineModel.get_name(machine_table_view.selectedRow);
                             delPopup.open();
                         }
