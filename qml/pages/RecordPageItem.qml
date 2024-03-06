@@ -171,7 +171,7 @@ Item {
                     leftMargin: 20
                 }
                 Row {
-                    spacing: 10
+                    spacing: 20
 
                     Label {
                         width: 50
@@ -293,7 +293,7 @@ Item {
                     }
                 }
                 Row {
-                    spacing: 10
+                    spacing: 20
 
                     Label {
                         width: 50
@@ -343,7 +343,7 @@ Item {
                         id: telInput
                         selectByMouse: true
                         placeholderText: qsTr("不允许为空")
-
+                        validator: RegularExpressionValidator { regularExpression: /^[1][3,5,7,8][0-9]\\d{8}$/ }
                         property int lengthLimit: 20
 
                         background: Rectangle {
@@ -380,7 +380,7 @@ Item {
                     }
                 }
                 Row {
-                    spacing: 10
+                    spacing: 20
 
                     Label {
                         width: 50
@@ -416,11 +416,11 @@ Item {
                     CustomDatePicker { id: commentDatePicker }
                 }
                 Row {
-                    spacing: 10
+                    spacing: 20
 
                     Rectangle {
                         id: orderImgArea
-                        width: 620
+                        width: 650
                         height: 150
                         border.color: "gray"
                         DropArea {
@@ -462,7 +462,7 @@ Item {
                                 delegate: Column {
                                     spacing: 5
                                     Image {
-                                        width: 100; height: 100
+                                        width: 110; height: 110
                                         source: srcFile
                                         fillMode: Image.PreserveAspectFit
                                     }
@@ -472,7 +472,7 @@ Item {
                                         anchors.horizontalCenter: parent.horizontalCenter
                                         horizontalAlignment: Text.AlignHCenter
                                         MouseArea {
-                                            hoverEnabled: true 
+                                            hoverEnabled: true
                                             anchors.fill: parent
                                             onClicked: {
                                                 orderImgModel.remove(index, 1);
@@ -485,13 +485,13 @@ Item {
                                             }
                                         }
                                     }
-                                }                               
+                                }
                             }
                         }
                     }
                     Rectangle {
                         id: commentImgArea
-                        width: 620
+                        width: 650
                         height: 150
                         border.color: "gray"
                         DropArea {
@@ -502,12 +502,170 @@ Item {
                                 drag.accept (Qt.LinkAction);
                             }
                             onDropped: (drop) => {
-                                console.log(drop.urls)
+                                console.log(drop.urls);
+                                if ((drop.urls.length + commentImgModel.count) > 5) {
+                                    MessageBox.showMessageBox("最多上传五张图片", "提示");
+                                } else {
+                                    if (drop.urls.length > 0) {
+                                        for (let i = 0;i < drop.urls.length;i++) {
+                                            commentImgModel.append({ srcFile: drop.urls[i] });
+                                        }
+                                    }
+                                }
                                 commentImgArea.color = "white"
                             }
                             onExited: {
                                 commentImgArea.color = "white";
                             }
+                            ListView {
+                                height: 200
+                                anchors {
+                                    topMargin: 10
+                                    top: parent.top
+                                    leftMargin: 10
+                                    left: parent.left
+                                    right: parent.right
+                                }
+                                orientation: ListView.Horizontal
+                                layoutDirection: Qt.LeftToRight
+                                spacing: 10
+                                model: commentImgModel
+                                delegate: Column {
+                                    spacing: 5
+                                    Image {
+                                        width: 110; height: 110
+                                        source: srcFile
+                                        fillMode: Image.PreserveAspectFit
+                                    }
+                                    Text {
+                                        id: delText2
+                                        text: "删除"
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        horizontalAlignment: Text.AlignHCenter
+                                        MouseArea {
+                                            hoverEnabled: true
+                                            anchors.fill: parent
+                                            onClicked: {
+                                                commentImgModel.remove(index, 1);
+                                            }
+                                            onEntered: {
+                                                delText2.font.underline = true;
+                                            }
+                                            onExited: {
+                                                delText2.font.underline = false;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                Row {
+                    spacing: 20
+
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "IP地址:"
+                        }
+                    }
+                    TextField {
+                        id: ipInput
+                        selectByMouse: true
+                        validator: RegularExpressionValidator { regularExpression: /^((2((5[0-5])|([0-4]\d)))|([0-1]?\d{1,2}))(\.((2((5[0-5])|([0-4]\d)))|([0-1]?\d{1,2}))){3}$/ }
+                        property int lengthLimit: 15
+
+                        background: Rectangle {
+                            id: ipInputBg
+                            implicitWidth: 250; implicitHeight: 30
+                            color: ipInput.enabled ? "white": "transparent"
+                            property alias borderColor: ipInputBg.border.color
+                            border {
+                                color: ipInput.focus ? "#21be2b": "gray"
+                            }
+                        }
+                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
+                    }
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "静态服务器:"
+                        }
+                    }
+                    TextField {
+                        id: staticServerInput
+                        selectByMouse: true
+
+                        property int lengthLimit: 20
+
+                        background: Rectangle {
+                            id: staticServerInputBg
+                            implicitWidth: 250; implicitHeight: 30
+                            color: staticServerInput.enabled ? "white": "transparent"
+                            property alias borderColor: staticServerInputBg.border.color
+                            border {
+                                color: staticServerInput.focus ? "#21be2b": "gray"
+                            }
+                        }
+                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
+                    }
+                    Label {
+                        width: 50
+                        height: 30
+
+                        Text {
+                            anchors {
+                                centerIn: parent
+                            }
+                            font.bold:          true
+                            font.pointSize:     10
+                            text:               "备注:"
+                        }
+                    }
+                    TextField {
+                        id: commentInput
+                        selectByMouse: true
+
+                        property int lengthLimit: 20
+
+                        background: Rectangle {
+                            id: commentInputBg
+                            implicitWidth: 250; implicitHeight: 30
+                            color: commentInput.enabled ? "white": "transparent"
+                            property alias borderColor: commentInputBg.border.color
+                            border {
+                                color: commentInput.focus ? "#21be2b": "gray"
+                            }
+                        }
+                        onTextChanged: if (length > lengthLimit) remove(lengthLimit, length);
+                    }
+                    CustomButton {
+                        id: saveDataBtn
+                        text: qsTr("保 存")
+                        colorDefault: Qt.lighter("blue")
+                        colorPressed: "#55aaff"
+                        colorMouseOver: "#40405f"
+
+                        implicitWidth: 120
+                        implicitHeight: 30
+
+                        onClicked: {
+
                         }
                     }
                 }
