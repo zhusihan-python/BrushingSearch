@@ -3,6 +3,7 @@ import sys
 import os
 
 from PySide6.QtGui import QGuiApplication, QIcon
+from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
 from PySide6.QtQuickControls2 import QQuickStyle
 from mainWindow import MainWindow
@@ -12,7 +13,7 @@ from need.proxy_models import hotel_proxy_model, machine_proxy_model
 
 
 if __name__ == "__main__":
-    app = QGuiApplication(sys.argv)
+    app = QApplication(sys.argv)
     engine = QQmlApplicationEngine()
 
     # Get Context

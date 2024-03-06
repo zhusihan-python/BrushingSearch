@@ -1,6 +1,7 @@
 import QtQuick 6.6
 import QtQuick.Controls 6.6
 import QtQuick.Layouts 1.5
+import Qt.labs.platform
 import Qt.labs.qmlmodels 1.0
 import assets 1.0
 import "../components"
@@ -10,6 +11,39 @@ Item {
     property int machine_id: -1
     property var orderImgModel: ListModel {}
     property var commentImgModel: ListModel {}
+
+    FileDialog {
+        id: fileDialog
+        options: FileDialog.DontUseNativeDialog
+        fileMode: FileDialog.OpenFiles
+        nameFilters: ["Image Files (*.png *.jpg)", "All Files (*)"]
+        onAccepted: {
+            console.log("User has selected " + fileDialog.currentFiles);
+            if (orderImgModel.count + fileDialog.currentFiles.length <= 5) {
+                for (let i=0;i<fileDialog.currentFiles.length;i++) {
+                    orderImgModel.append({ srcFile: fileDialog.currentFiles[i] });
+                }
+            }
+            fileDialog.currentFiles.length = 0;
+            fileDialog.close();
+        }
+    }
+    FileDialog {
+        id: fileDialog2
+        options: FileDialog.DontUseNativeDialog
+        fileMode: FileDialog.OpenFiles
+        nameFilters: ["Image Files (*.png *.jpg)", "All Files (*)"]
+        onAccepted: {
+            console.log("User has selected " + fileDialog2.currentFiles);
+            if (commentImgModel.count + fileDialog2.currentFiles.length <= 5) {
+                for (let i=0;i<fileDialog2.currentFiles.length;i++) {
+                    commentImgModel.append({ srcFile: fileDialog2.currentFiles[i] });
+                }
+            }
+            fileDialog2.currentFiles.length = 0;
+            fileDialog2.close();
+        }
+    }
     Rectangle {
         id: dataInputItem
         anchors.fill: parent
@@ -396,8 +430,22 @@ Item {
                         }
                     }
                     CustomDatePicker { id: orderDatePicker }
+                    CustomButton {
+                        id: uploadOrderBtn
+                        text: qsTr("上传")
+                        colorDefault: Qt.lighter("blue")
+                        colorPressed: "#55aaff"
+                        colorMouseOver: "#40405f"
+
+                        implicitWidth: 100
+                        implicitHeight: 25
+
+                        onClicked: {
+                            fileDialog.open();
+                        }
+                    }
                     Label {
-                        width: 310
+                        width: 190
                         height: 30
                     }
                     Label {
@@ -414,6 +462,20 @@ Item {
                         }
                     }
                     CustomDatePicker { id: commentDatePicker }
+                    CustomButton {
+                        id: uploadCommentBtn
+                        text: qsTr("上传")
+                        colorDefault: Qt.lighter("blue")
+                        colorPressed: "#55aaff"
+                        colorMouseOver: "#40405f"
+
+                        implicitWidth: 100
+                        implicitHeight: 25
+
+                        onClicked: {
+                            fileDialog2.open();
+                        }
+                    }
                 }
                 Row {
                     spacing: 20
