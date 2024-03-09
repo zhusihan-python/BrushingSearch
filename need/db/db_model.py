@@ -120,6 +120,26 @@ class DBModels(object):
             return res
         return []
 
+    def get_records(self):
+        sql = """SELECT p.name, r.date, h.name, r.comment_date, IIF(r.is_comment=0, '否', '是'), r.payor, 
+                    CASE r.pay_channel 
+                        WHEN 0 THEN '微信' 
+                        WHEN 1 THEN '支付宝' 
+                        WHEN 2 THEN '其他' 
+                    END AS pay_channel, r.payment, IIF(r.is_paid=0, '否', '是'), r.resident, r.tel, 
+                    (SELECT GROUP_CONCAT(o.filepath, ',') AS order_imgs FROM order_screenshot o WHERE o.record_id=r.id) AS OM, 
+                    (SELECT GROUP_CONCAT(c.filepath, ',') AS comment_imgs FROM comment_screenshot c WHERE c.record_id=r.id) AS CM, 
+                    m.number, r.id FROM records r 
+                    LEFT JOIN hotels h ON r.hotel_id = h.id 
+                    LEFT JOIN platforms p ON r.platform = p.id 
+                    LEFT JOIN machines m ON r.machine_no = m.id 
+                    ORDER BY r.id DESC LIMIT 100"""
+        self.cur.execute(sql)
+        res = self.cur.fetchall()
+        if res:
+            return res
+        return []
+
     def search_machines_done(self, hotel_id, platform_id):
         if hotel_id != -1:
             sql = f"""SELECT number, id FROM machines WHERE id IN 

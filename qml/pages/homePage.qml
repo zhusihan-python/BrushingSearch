@@ -70,23 +70,6 @@ Item {
                         color: homeTabBar.currentIndex == 1 ? "white" : "mediumslateblue"
                     }
                 }
-
-                TabButton {
-                    height: 30
-                    text: qsTr("全部订单")
-                    font {
-                        family: Style.fontAwesome
-                        bold: true
-                        pointSize: 12
-                    }
-
-                    anchors {
-                        top: parent.top
-                    }
-                    background: Rectangle {
-                        color: homeTabBar.currentIndex == 2 ? "white" : "mediumslateblue"
-                    }
-                }
             }
         }
 
@@ -101,7 +84,6 @@ Item {
 
             HotelSearchItem {}
             MachineRecordsItem {}
-            RecordsItem {}
             // flow edit page
             Item {
                 Rectangle {

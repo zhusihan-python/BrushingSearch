@@ -474,3 +474,89 @@ class MachineCombo(QAbstractListModel):
 machine_combo = MachineCombo()
 machine_combo.init_data("")
 
+
+class RecordModel(QAbstractTableModel):
+    platform = Qt.UserRole + 1
+    date = Qt.UserRole + 2
+    hotel_name = Qt.UserRole + 3
+    comment_date = Qt.UserRole + 4
+    is_comment= Qt.UserRole + 5
+    payor = Qt.UserRole + 6
+    pay_channel = Qt.UserRole + 7
+    payment = Qt.UserRole + 8
+    is_paid = Qt.UserRole + 9
+    resident = Qt.UserRole + 10
+    tel = Qt.UserRole + 11
+    order_img = Qt.UserRole + 12
+    comment_img = Qt.UserRole + 13
+    machine_num = Qt.UserRole + 14
+
+    _roles = {platform : b'platform', date: b'date', hotel_name: b'hotel_name', 
+        comment_date: b'comment_date', is_comment : b'is_comment', payor: b'payor', 
+        pay_channel: b'pay_channel', payment: b'payment', is_paid: b'is_paid', 
+        resident: b'resident', tel: b'tel', order_img: b'order_img', 
+        comment_img: b'comment_img', machine_num: b'machine_num', Qt.DisplayRole : b'display'}
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.raw = []
+        self._data = []
+        self.horHeader = ["平台", "下单日期", "酒店名称", "点评日期", "点评成功", "代付人", 
+                          "付款渠道", "付款金额", "是否结账", "入住人", "电话", "评论截图", 
+                          "下单截图", "机器编号"]
+
+    @Slot()
+    def init_data(self):
+        self.beginResetModel()
+        self.raw = db_model.get_records()
+        self._data = [record[:-1] for record in self.raw]
+        self.endResetModel()
+
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            return self._data[index.row()][index.column()]
+
+        elif role == Qt.ToolTipRole:
+            return f"This is a tool tip for [{index.row()}][{index.column()}]"
+
+        else:
+            return None
+
+    @Slot(int, result=int)
+    def rowCount(self, parent):
+        return len(self._data)
+
+    def columnCount(self, index):
+        if len(self._data) > 0:
+            return len(self._data[0])
+        return len(self.horHeader)
+
+    def headerData(self, section, orientation, role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole:
+            return self.horHeader[section]
+        return None
+
+    def roleNames(self):
+        return self._roles
+
+    @Slot(int, result='QVariantList')
+    def get_comment_imgs(self, index):
+        comment_imgs = []
+        root_dir = os.path.dirname(QGuiApplication.arguments()[0])
+        if index >=0 and index <= len(self.raw):
+            comment_imgs = self.raw[index][11].split(',')
+            comment_imgs = ["file:///" + root_dir + "/data/" + img for img in comment_imgs]
+        return comment_imgs
+
+    @Slot(int, result='QVariantList')
+    def get_order_imgs(self, index):
+        order_imgs = []
+        root_dir = os.path.dirname(QGuiApplication.arguments()[0])
+        if index >=0 and index <= len(self.raw):
+            order_imgs = self.raw[index][12].split(',')
+            order_imgs = ["file:///" + root_dir + "/data/" + img for img in order_imgs]
+        return order_imgs
+
+
+record_model = RecordModel()
+record_model.init_data()
