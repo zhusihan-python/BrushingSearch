@@ -2,7 +2,6 @@ import QtQuick 6.6
 import QtQuick.Controls 6.6
 import QtQuick.Layouts 1.5
 import "../components"
-import "../js/messageBox.js" as MessageBox
 
 Popup {
     id: delMachinePop
@@ -189,8 +188,21 @@ Popup {
     }
 
     function delMachine() {
-        machineModel.del_machine(machine_table_view.selectedRow);
-        machineModel.init_data();
+        if (!machineModel.machine_has_record(machine_table_view.selectedRow)) {
+            machineModel.del_machine(machine_table_view.selectedRow);
+            machineModel.init_data();
+        } else {
+            let component = Qt.createComponent("../js/MessageDialog.qml");
+            if (component.status === Component.Ready) {
+                let dialog = component.createObject(machinePageItem);
+                dialog.title = qsTr("提示");
+                dialog.text = "机器已关联订单，无法删除";
+                dialog.anchors.centerIn = machinePageItem;
+                dialog.open();
+            } else {
+                console.error(component.errorString());
+            }
+        }
     }
 
     anchors {

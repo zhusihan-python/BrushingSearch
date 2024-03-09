@@ -171,6 +171,14 @@ class MachineModel(QAbstractTableModel):
         if machine_id > 0:
             db_model.remove_machine(machine_id)
 
+    @Slot(int, result=bool)
+    def machine_has_record(self, index):
+        machine_id = self.get_machine_id(index)
+        record_cnt = db_model.machine_records_count(machine_id=machine_id)
+        if record_cnt > 0:
+            return True
+        return False
+
 
 machine_model = MachineModel()
 machine_model.init_data()

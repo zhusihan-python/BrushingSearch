@@ -87,6 +87,14 @@ class DBModels(object):
         self.cur.execute(sql)
         self.conn.commit()
 
+    def machine_records_count(self, machine_id):
+        sql = f"SELECT COUNT(1) FROM records WHERE machine_no={machine_id} "
+        self.cur.execute(sql)
+        res = self.cur.fetchone()
+        if res:
+            return res[0]
+        return 0
+
     def get_machine_records(self, platform_id, hotel_id, machine_no):
         if hotel_id != -1:
             sql = f"""SELECT p.name, r.date, h.name, r.comment_date, IIF(r.is_comment=0, '否', '是'), r.payor, 
