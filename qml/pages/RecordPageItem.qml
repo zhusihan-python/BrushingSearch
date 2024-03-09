@@ -11,6 +11,7 @@ Item {
     property int machine_id: -1
     property var orderImgModel: ListModel {}
     property var commentImgModel: ListModel {}
+    property ListModel rImgModel: ListModel {}
 
     FileDialog {
         id: fileDialog
@@ -811,13 +812,13 @@ Item {
                                                         anchors.fill: parent
                                                         onPressed: {
                                                             let comment_imgs = recordModel.get_comment_imgs(row);
-                                                            imgModel.clear();
+                                                            rImgModel.clear();
                                                             for (let j=0;j<comment_imgs.length;j++) {
-                                                                imgModel.append({"source": comment_imgs[j]});
+                                                                rImgModel.append({"source": comment_imgs[j]});
                                                             }
-                                                            pathView.model = imgModel;
-                                                            pathView.currentIndex = index;
-                                                            popup.visible = true;
+                                                            rPathView.model = rImgModel;
+                                                            rPathView.currentIndex = index;
+                                                            rPopup.visible = true;
                                                         }
                                                     }
                                                 }
@@ -857,13 +858,13 @@ Item {
                                                         anchors.fill: parent
                                                         onPressed: {
                                                             let order_imgs = recordModel.get_order_imgs(row);
-                                                            imgModel.clear();
+                                                            rImgModel.clear();
                                                             for (let j=0;j<order_imgs.length;j++) {
-                                                                imgModel.append({"source": order_imgs[j]});
+                                                                rImgModel.append({"source": order_imgs[j]});
                                                             }
-                                                            pathView.model = imgModel;
-                                                            pathView.currentIndex = index;
-                                                            popup.visible = true;
+                                                            rPathView.model = rImgModel;
+                                                            rPathView.currentIndex = index;
+                                                            rPopup.visible = true;
                                                         }
                                                     }
                                                 }
@@ -1040,6 +1041,74 @@ Item {
                     }
                 }
             }
+        }
+    }
+    Popup {
+        id: rPopup
+        width: 600
+        height: 400
+        visible: false
+        background: Rectangle {
+            color: "transparent"
+            // border.color: "black"
+        }
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+        anchors.centerIn: parent
+        property int itemCount: 3
+        PathView{
+            id: rPathView
+            model: rImgModel
+            delegate: Item {
+                id:delegateItem
+                width: 300
+                height: 300
+                z: PathView.iconZ
+                scale: PathView.iconScale
+
+                Image{
+                    id:image
+                    source: model.source
+                    width: delegateItem.width
+                    height: delegateItem.height
+                }
+
+                transform: Rotation{
+                    origin.x:image.width/2.0
+                    origin.y:image.height/2.0
+                    axis{x:0;y:1;z:0}
+                    angle: delegateItem.PathView.iconAngle
+                }
+            }
+            path:rCoverFlowPath
+            pathItemCount: rPopup.itemCount
+            anchors.fill: parent
+
+            preferredHighlightBegin: 0.5
+            preferredHighlightEnd: 0.5
+
+        }
+
+        Path{
+            id:rCoverFlowPath
+            startX: 0
+            startY: rPopup.height/3
+
+            PathAttribute{name:"iconZ";value: 0}
+            PathAttribute{name:"iconAngle";value: 70}
+            PathAttribute{name:"iconScale";value: 0.6}
+            PathLine{x:rPopup.width/2;y:rPopup.height/3}
+
+            PathAttribute{name:"iconZ";value: 100}
+            PathAttribute{name:"iconAngle";value: 0}
+            PathAttribute{name:"iconScale";value: 1.0}
+
+            PathLine{x:rPopup.width;y:rPopup.height/3}
+            PathAttribute{name:"iconZ";value: 0}
+            PathAttribute{name:"iconAngle";value: -70}
+            PathAttribute{name:"iconScale";value: 0.6}
+            PathPercent{value:1.0}
+
         }
     }
     Connections {
